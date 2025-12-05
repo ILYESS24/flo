@@ -1,5 +1,5 @@
 from typing import List, Optional, Callable, Union, Dict, Any
-from aurora_ai.aurora_ai.arium.aurora import aurora
+from aurora_ai.aurora_ai.arium.arium import aurora
 from aurora_ai.aurora_ai.arium.memory import MessageMemory, BaseMemory, MessageMemoryItem
 from aurora_ai.aurora_ai.arium.protocols import ExecutableNode
 from aurora_ai.aurora_ai.arium.nodes import auroraNode, ForEachNode

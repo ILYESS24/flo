@@ -6,7 +6,7 @@ from aurora_ai.aurora_ai.models import BaseMessage, UserMessage
 import asyncio
 
 if TYPE_CHECKING:  # need to have an optional import else will get circular dependency error as aurora also has auroraNode reference
-    from aurora_ai.aurora_ai.arium.aurora import aurora
+    from aurora_ai.aurora_ai.arium.arium import aurora
 
 
 class auroraNode:
