@@ -1,16 +1,16 @@
 from typing import List, Optional, Callable, Union, Dict, Any
-from aurora_ai.aurora.aurora import aurora
-from aurora_ai.aurora.memory import MessageMemory, BaseMemory, MessageMemoryItem
-from aurora_ai.aurora.protocols import ExecutableNode
-from aurora_ai.aurora.nodes import auroraNode, ForEachNode
-from aurora_ai.models import BaseMessage, UserMessage
-from aurora_ai.models.agent import Agent, resolve_variables
-from aurora_ai.tool.base_tool import Tool
+from aurora_ai.aurora_ai.aurora.aurora import aurora
+from aurora_ai.aurora_ai.aurora.memory import MessageMemory, BaseMemory, MessageMemoryItem
+from aurora_ai.aurora_ai.aurora.protocols import ExecutableNode
+from aurora_ai.aurora_ai.aurora.nodes import auroraNode, ForEachNode
+from aurora_ai.aurora_ai.models import BaseMessage, UserMessage
+from aurora_ai.aurora_ai.models.agent import Agent, resolve_variables
+from aurora_ai.aurora_ai.tool.base_tool import Tool
 import yaml
-from aurora_ai.builder.agent_builder import AgentBuilder
-from aurora_ai.llm import BaseLLM
-from aurora_ai.aurora.llm_router import create_llm_router
-from aurora_ai.aurora.nodes import FunctionNode
+from aurora_ai.aurora_ai.builder.agent_builder import AgentBuilder
+from aurora_ai.aurora_ai.llm import BaseLLM
+from aurora_ai.aurora_ai.aurora.llm_router import create_llm_router
+from aurora_ai.aurora_ai.aurora.nodes import FunctionNode
 
 
 class auroraBuilder:
@@ -876,7 +876,7 @@ class auroraBuilder:
         Returns:
             BaseLLM: Configured LLM instance
         """
-        from aurora_ai.helpers.llm_factory import create_llm_from_config
+        from aurora_ai.aurora_ai.helpers.llm_factory import create_llm_from_config
 
         return create_llm_from_config(model_config, **kwargs)
 
@@ -897,8 +897,8 @@ class auroraBuilder:
         Returns:
             Agent: Configured agent instance
         """
-        from aurora_ai.models.base_agent import ReasoningPattern
-        # from aurora_ai.llm import OpenAI, Anthropic, Gemini, OllamaLLM
+        from aurora_ai.aurora_ai.models.base_agent import ReasoningPattern
+        # from aurora_ai.aurora_ai.llm import OpenAI, Anthropic, Gemini, OllamaLLM
 
         # Extract basic configuration
         name = agent_config['name']
@@ -947,7 +947,7 @@ class auroraBuilder:
         # Handle parser configuration if present
         output_schema = None
         if 'parser' in agent_config:
-            from aurora_ai.formatter.yaml_format_parser import FloYamlParser
+            from aurora_ai.aurora_ai.formatter.yaml_format_parser import FloYamlParser
 
             # Convert agent_config to the format expected by FloYamlParser
             parser_config = {'agent': {'parser': agent_config['parser']}}

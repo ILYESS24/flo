@@ -3,7 +3,7 @@ from typing import TypeVar, Generic, List, Dict, Optional, Any
 from dataclasses import dataclass, field
 from enum import Enum
 
-from aurora_ai.models import BaseMessage
+from aurora_ai.aurora_ai.models import BaseMessage
 
 # Define the generic type variable
 T = TypeVar('T')

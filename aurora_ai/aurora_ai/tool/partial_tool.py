@@ -1,6 +1,6 @@
 from typing import Dict, Any, Optional
 from .base_tool import Tool, ToolExecutionError
-from aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.utils.logger import logger
 
 
 class PartialTool(Tool):

@@ -9,7 +9,7 @@ import os
 from typing import Dict, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from aurora_ai.llm import BaseLLM
+    from aurora_ai.aurora_ai.llm import BaseLLM
 
 
 class LLMFactory:
@@ -95,7 +95,7 @@ class LLMFactory:
         provider: str, model_config: Dict[str, Any], **kwargs
     ) -> 'BaseLLM':
         """Create standard LLM instances (OpenAI, Anthropic, Gemini, Ollama)."""
-        from aurora_ai.llm import OpenAI, Anthropic, Gemini, OllamaLLM
+        from aurora_ai.aurora_ai.llm import OpenAI, Anthropic, Gemini, OllamaLLM
 
         model_name = model_config.get('name')
         if not model_name:
@@ -119,7 +119,7 @@ class LLMFactory:
     @staticmethod
     def _create_vertexai_llm(model_config: Dict[str, Any], **kwargs) -> 'BaseLLM':
         """Create VertexAI LLM instance with project and location."""
-        from aurora_ai.llm import VertexAI
+        from aurora_ai.aurora_ai.llm import VertexAI
 
         model_name = model_config.get('name')
         if not model_name:
@@ -148,7 +148,7 @@ class LLMFactory:
     @staticmethod
     def _create_openai_vllm_llm(model_config: Dict[str, Any], **kwargs) -> 'BaseLLM':
         """Create OpenAI vLLM instance with base_url handling."""
-        from aurora_ai.llm import OpenAIVLLM
+        from aurora_ai.aurora_ai.llm import OpenAIVLLM
 
         model_name = model_config.get('name')
         if not model_name:
@@ -181,7 +181,7 @@ class LLMFactory:
     @staticmethod
     def _create_rootflo_llm(model_config: Dict[str, Any], **kwargs) -> 'BaseLLM':
         """Create RootFlo LLM instance with authentication."""
-        from aurora_ai.llm import RootFloLLM
+        from aurora_ai.aurora_ai.llm import RootFloLLM
 
         model_id = model_config.get('model_id')
         if not model_id:

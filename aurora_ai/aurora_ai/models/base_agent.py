@@ -1,14 +1,14 @@
 from typing import Dict, Any, List, Optional, Tuple
 from abc import ABC, abstractmethod
 from enum import Enum
-from aurora_ai.llm.base_llm import BaseLLM
-from aurora_ai.models.chat_message import (
+from aurora_ai.aurora_ai.llm.base_llm import BaseLLM
+from aurora_ai.aurora_ai.models.chat_message import (
     BaseMessage,
     MediaMessageContent,
     TextMessageContent,
     FunctionMessage,
 )
-from aurora_ai.utils.variable_extractor import resolve_variables
+from aurora_ai.aurora_ai.utils.variable_extractor import resolve_variables
 
 
 class AgentType(Enum):

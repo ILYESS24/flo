@@ -14,9 +14,9 @@ import pymupdf
 import pymupdf4llm
 import chardet
 
-from aurora_ai.models.document import DocumentType
-from aurora_ai.models.chat_message import DocumentMessageContent
-from aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.models.document import DocumentType
+from aurora_ai.aurora_ai.models.chat_message import DocumentMessageContent
+from aurora_ai.aurora_ai.utils.logger import logger
 
 
 class DocumentProcessingError(Exception):

@@ -1,8 +1,8 @@
 import json
 from typing import Dict, Any, List, Optional
-from aurora_ai.models.base_agent import BaseAgent, AgentType, ReasoningPattern
-from aurora_ai.llm.base_llm import BaseLLM
-from aurora_ai.models.chat_message import (
+from aurora_ai.aurora_ai.models.base_agent import BaseAgent, AgentType, ReasoningPattern
+from aurora_ai.aurora_ai.llm.base_llm import BaseLLM
+from aurora_ai.aurora_ai.models.chat_message import (
     AssistantMessage,
     BaseMessage,
     MessageType,
@@ -11,20 +11,20 @@ from aurora_ai.models.chat_message import (
     FunctionMessage,
     SystemMessage,
 )
-from aurora_ai.tool.base_tool import Tool, ToolExecutionError
-from aurora_ai.models.agent_error import AgentError
-from aurora_ai.utils.logger import logger
-from aurora_ai.utils.variable_extractor import (
+from aurora_ai.aurora_ai.tool.base_tool import Tool, ToolExecutionError
+from aurora_ai.aurora_ai.models.agent_error import AgentError
+from aurora_ai.aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.utils.variable_extractor import (
     extract_variables_from_inputs,
     extract_agent_variables,
     validate_multi_agent_variables,
     resolve_variables,
 )
-from aurora_ai.telemetry.instrumentation import (
+from aurora_ai.aurora_ai.telemetry.instrumentation import (
     trace_agent_execution,
     agent_metrics,
 )
-from aurora_ai.telemetry import get_tracer
+from aurora_ai.aurora_ai.telemetry import get_tracer
 
 
 class Agent(BaseAgent):

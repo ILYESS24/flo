@@ -2,10 +2,10 @@ from typing import Dict, Any, List, Optional, AsyncIterator
 import aiohttp
 import json
 
-from aurora_ai.models.chat_message import ImageMessageContent
+from aurora_ai.aurora_ai.models.chat_message import ImageMessageContent
 from .base_llm import BaseLLM
-from aurora_ai.tool.base_tool import Tool
-from aurora_ai.telemetry.instrumentation import trace_llm_call, trace_llm_stream
+from aurora_ai.aurora_ai.tool.base_tool import Tool
+from aurora_ai.aurora_ai.telemetry.instrumentation import trace_llm_call, trace_llm_stream
 
 
 class OllamaLLM(BaseLLM):

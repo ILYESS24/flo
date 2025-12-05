@@ -1,12 +1,12 @@
 from typing import List, Optional, Dict, Any, Union, Type
-from aurora_ai.models import AssistantMessage
+from aurora_ai.aurora_ai.models import AssistantMessage
 import yaml
-from aurora_ai.models.agent import Agent
-from aurora_ai.models.base_agent import ReasoningPattern
-from aurora_ai.llm import BaseLLM
-from aurora_ai.tool.base_tool import Tool
-from aurora_ai.tool.tool_config import ToolConfig, create_tool_config
-from aurora_ai.formatter.yaml_format_parser import FloYamlParser
+from aurora_ai.aurora_ai.models.agent import Agent
+from aurora_ai.aurora_ai.models.base_agent import ReasoningPattern
+from aurora_ai.aurora_ai.llm import BaseLLM
+from aurora_ai.aurora_ai.tool.base_tool import Tool
+from aurora_ai.aurora_ai.tool.tool_config import ToolConfig, create_tool_config
+from aurora_ai.aurora_ai.formatter.yaml_format_parser import FloYamlParser
 from pydantic import BaseModel
 
 
@@ -220,7 +220,7 @@ class AgentBuilder:
 
         # Configure LLM based on model settings
         if 'model' in agent_config and base_llm is None:
-            from aurora_ai.helpers.llm_factory import create_llm_from_config
+            from aurora_ai.aurora_ai.helpers.llm_factory import create_llm_from_config
 
             model_config: dict = agent_config['model']
             # Merge base_url from agent_config if present and not in model_config

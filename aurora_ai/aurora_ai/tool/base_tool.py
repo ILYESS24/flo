@@ -1,6 +1,6 @@
 from typing import Dict, Any, Callable, List, Optional
-from aurora_ai.models.agent_error import AgentError
-from aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.models.agent_error import AgentError
+from aurora_ai.aurora_ai.utils.logger import logger
 
 
 class ToolExecutionError(AgentError):

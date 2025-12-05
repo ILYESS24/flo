@@ -8,7 +8,7 @@ inputs, and agent configurations for runtime variable validation.
 import re
 from typing import List, Set, Dict, Any
 
-from aurora_ai.models.chat_message import BaseMessage, TextMessageContent, AssistantMessage
+from aurora_ai.aurora_ai.models.chat_message import BaseMessage, TextMessageContent, AssistantMessage
 
 
 def extract_variables_from_text(text: str | AssistantMessage) -> Set[str]:

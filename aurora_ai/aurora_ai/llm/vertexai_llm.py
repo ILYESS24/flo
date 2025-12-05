@@ -1,7 +1,7 @@
 from typing import Optional
 from google import genai
-from aurora_ai.llm.gemini_llm import Gemini
-from aurora_ai.llm.base_llm import BaseLLM
+from aurora_ai.aurora_ai.llm.gemini_llm import Gemini
+from aurora_ai.aurora_ai.llm.base_llm import BaseLLM
 
 
 class VertexAI(Gemini):

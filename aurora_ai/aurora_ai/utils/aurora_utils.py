@@ -1,6 +1,6 @@
 from typing import Dict, Any
 import json
-from aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.utils.logger import logger
 
 
 class FloUtils:

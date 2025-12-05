@@ -156,7 +156,7 @@ def configure_telemetry(
         additional_attributes: Additional resource attributes
 
     Example:
-        >>> from aurora_ai.telemetry import configure_telemetry
+        >>> from aurora_ai.aurora_ai.telemetry import configure_telemetry
         >>> configure_telemetry(
         ...     service_name="my_ai_app",
         ...     otlp_endpoint="http://localhost:4317",
@@ -188,7 +188,7 @@ def get_tracer() -> Optional[trace.Tracer]:
         Tracer instance or None if not configured
 
     Example:
-        >>> from aurora_ai.telemetry import get_tracer
+        >>> from aurora_ai.aurora_ai.telemetry import get_tracer
         >>> tracer = get_tracer()
         >>> if tracer:
         ...     with tracer.start_as_current_span("my_operation"):
@@ -206,7 +206,7 @@ def get_meter() -> Optional[metrics.Meter]:
         Meter instance or None if not configured
 
     Example:
-        >>> from aurora_ai.telemetry import get_meter
+        >>> from aurora_ai.aurora_ai.telemetry import get_meter
         >>> meter = get_meter()
         >>> if meter:
         ...     counter = meter.create_counter("operations_total")
@@ -222,7 +222,7 @@ def shutdown_telemetry() -> None:
     Call this at the end of your application lifecycle.
 
     Example:
-        >>> from aurora_ai.telemetry import shutdown_telemetry
+        >>> from aurora_ai.aurora_ai.telemetry import shutdown_telemetry
         >>> shutdown_telemetry()
     """
     _global_telemetry.shutdown()

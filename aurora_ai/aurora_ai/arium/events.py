@@ -9,7 +9,7 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
 import time
-from aurora_ai.utils.logger import logger
+from aurora_ai.aurora_ai.utils.logger import logger
 
 
 class auroraEventType(Enum):

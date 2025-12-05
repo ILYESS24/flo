@@ -1,6 +1,6 @@
 from typing import Any, AsyncIterator, Dict, List, Optional
 from .openai_llm import OpenAI
-from aurora_ai.telemetry.instrumentation import trace_llm_stream
+from aurora_ai.aurora_ai.telemetry.instrumentation import trace_llm_stream
 
 
 class OpenAIVLLM(OpenAI):

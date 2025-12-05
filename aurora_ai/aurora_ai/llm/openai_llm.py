@@ -2,15 +2,15 @@ import base64
 from typing import Dict, Any, List, AsyncIterator, Optional
 from openai import AsyncOpenAI
 from .base_llm import BaseLLM
-from aurora_ai.models.chat_message import ImageMessageContent
-from aurora_ai.tool.base_tool import Tool
-from aurora_ai.telemetry.instrumentation import (
+from aurora_ai.aurora_ai.models.chat_message import ImageMessageContent
+from aurora_ai.aurora_ai.tool.base_tool import Tool
+from aurora_ai.aurora_ai.telemetry.instrumentation import (
     trace_llm_call,
     trace_llm_stream,
     llm_metrics,
     add_span_attributes,
 )
-from aurora_ai.telemetry import get_tracer
+from aurora_ai.aurora_ai.telemetry import get_tracer
 from opentelemetry import trace
 
 

@@ -6,10 +6,10 @@ making it easy to create plan-and-execute workflows.
 """
 
 from typing import List, Optional
-from aurora_ai.models.agent import Agent
-from aurora_ai.llm.base_llm import BaseLLM
-from aurora_ai.aurora.memory import PlanAwareMemory
-from aurora_ai.tool.plan_tool import PlanTool, StepTool, PlanStatusTool
+from aurora_ai.aurora_ai.models.agent import Agent
+from aurora_ai.aurora_ai.llm.base_llm import BaseLLM
+from aurora_ai.aurora_ai.aurora.memory import PlanAwareMemory
+from aurora_ai.aurora_ai.tool.plan_tool import PlanTool, StepTool, PlanStatusTool
 
 
 class PlannerAgent(Agent):

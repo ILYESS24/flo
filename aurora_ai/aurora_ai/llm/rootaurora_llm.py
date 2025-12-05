@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import AsyncIterator, Dict, Any, List, Optional
 from datetime import datetime, timedelta
-from aurora_ai.models.chat_message import ImageMessageContent
+from aurora_ai.aurora_ai.models.chat_message import ImageMessageContent
 import jwt
 import httpx
 import asyncio
@@ -10,7 +10,7 @@ from .openai_llm import OpenAI
 from .gemini_llm import Gemini
 from .anthropic_llm import Anthropic
 from .openai_vllm import OpenAIVLLM
-from aurora_ai.tool.base_tool import Tool
+from aurora_ai.aurora_ai.tool.base_tool import Tool
 
 
 class LLMProvider(Enum):
