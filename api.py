@@ -12,9 +12,9 @@ import json
 # Aurora AI imports
 from aurora_ai.builder.agent_builder import AgentBuilder
 from aurora_ai.llm import OpenAI, Anthropic, Gemini
-from aurora_ai.aurora import AuroraBuilder
+from aurora_ai import auroraBuilder
 from aurora_ai.models.agent import Agent
-from aurora_ai.aurora.memory import MessageMemory
+from aurora_ai import MessageMemory
 
 app = FastAPI(
     title="Aurora AI API",
