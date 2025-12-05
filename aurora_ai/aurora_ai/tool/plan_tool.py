@@ -8,7 +8,7 @@ enabling agents to create, store, and manage execution plans automatically.
 import uuid
 import re
 from aurora_ai.aurora_ai.tool.base_tool import Tool
-from aurora_ai.aurora_ai.aurora.memory import PlanAwareMemory, ExecutionPlan, PlanStep, StepStatus
+from aurora_ai.aurora_ai.arium.memory import PlanAwareMemory, ExecutionPlan, PlanStep, StepStatus
 
 
 class PlanTool(Tool):
