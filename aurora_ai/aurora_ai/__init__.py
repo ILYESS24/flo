@@ -22,6 +22,10 @@ from .models import (
     DocumentMessageContent,
 )
 
+# Aliases for compatibility
+HumanMessage = UserMessage
+AIMessage = AssistantMessage
+
 from .builder.agent_builder import AgentBuilder
 
 # LLM package - Language model integrations
