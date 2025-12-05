@@ -18,6 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY aurora_ai/ ./aurora_ai/
 COPY api.py .
 
+# Ajouter /app au PYTHONPATH pour que Python puisse trouver le module aurora_ai
+ENV PYTHONPATH=/app:$PYTHONPATH
+
 # Créer un utilisateur non-root
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
