@@ -1,7 +1,6 @@
 services:
-  - type: web
+  - type: static
     name: aurora-ai-studio
-    env: static
     buildCommand: pnpm install && pnpm build
     staticPublishPath: ./dist
     envVars:
