@@ -21,7 +21,7 @@
 Ajoutez ces variables d'environnement dans les paramètres du Static Site :
 
 - **VITE_API_URL** : L'URL de votre API backend déployée sur Render
-  - Exemple : `https://votre-api.onrender.com`
+  - **Valeur** : `https://flo-nusb.onrender.com`
   - ⚠️ N'oubliez pas le `https://` et pas de slash à la fin
 
 - **VITE_OPENROUTER_API_KEY** : Votre clé API OpenRouter
