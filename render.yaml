@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: aurora-ai-studio
+    env: static
+    buildCommand: pnpm install && pnpm build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://flo-nusb.onrender.com
+      - key: VITE_OPENROUTER_API_KEY
+        sync: false  # À configurer manuellement dans le dashboard Render
+
