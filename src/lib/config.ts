@@ -1,7 +1,7 @@
 // Configuration pour Aurora AI Studio
 // ⚠️ Vite expose les variables d'env côté front via `import.meta.env`
 const API_BASE_URL =
-  (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000';
+  (import.meta as any).env?.VITE_API_URL || 'https://flo-nusb.onrender.com';
 
 // OpenRouter API Key - Production key
 // Must be set via environment variable VITE_OPENROUTER_API_KEY
