@@ -65,7 +65,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden border-32 border-black rounded-3xl">
+    <div className="relative min-h-screen w-full overflow-hidden border-32 border-black">
       <ShaderAnimation />
       <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
         {/* Logo + Tagline */}
