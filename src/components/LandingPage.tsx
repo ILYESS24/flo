@@ -65,7 +65,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden border-8 border-black rounded-3xl">
+    <div className="relative min-h-screen w-full overflow-hidden border-16 border-black rounded-3xl">
       <ShaderAnimation />
       <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
         {/* Logo + Tagline */}
@@ -85,7 +85,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
 
         {/* Prompt Bar (like screenshot) */}
         <form onSubmit={handleSubmit} className="w-full max-w-3xl">
-          <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-4 border-black px-6 py-3">
+          <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-8 border-black px-6 py-3">
             {/* Left icons */}
             <div className="flex items-center gap-4 text-neutral-400">
               <button
@@ -118,7 +118,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               type="submit"
               size="icon"
               disabled={isLoading}
-              className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-2 border-black"
+              className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-4 border-black"
             >
               <CornerDownLeft className="w-4 h-4" />
             </Button>
@@ -126,7 +126,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
         </form>
 
         {files.length > 0 && (
-          <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-2 border-black rounded-lg px-3 py-2 bg-neutral-900/50">
+          <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-4 border-black rounded-lg px-3 py-2 bg-black">
             {files.length === 1
               ? `1 fichier ajouté : ${files[0].name}`
               : `${files.length} fichiers ajoutés`}
