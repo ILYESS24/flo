@@ -73,9 +73,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden border-32 border-black">
-      <ShaderAnimation />
-      <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
+    <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden">
+      {/* Bordure extérieure - effet de carte flottante */}
+      <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px' }}>
+        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl">
+          {/* Contenu intérieur avec espace */}
+          <div className="w-full h-full rounded-[30px] overflow-hidden relative">
+            <ShaderAnimation />
+            <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
         {/* Logo + Tagline */}
         <div className="text-center space-y-4">
           <Typewriter
@@ -148,6 +153,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               : `${files.length} fichiers ajoutés`}
           </div>
         )}
+          </div>
+        </div>
       </div>
     </div>
   );
