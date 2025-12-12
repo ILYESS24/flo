@@ -34,7 +34,8 @@ const ConfigEditorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 const ToolbarComponent: React.FC<{
   showValidation: boolean;
   setShowValidation: (show: boolean) => void;
-}> = ({ showValidation, setShowValidation }) => {
+  isGeneratingWorkflow: boolean;
+}> = ({ showValidation, setShowValidation, isGeneratingWorkflow }) => {
   const { openAgentEditor, openRouterEditor } = useDesignerStore();
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
@@ -45,6 +46,12 @@ const ToolbarComponent: React.FC<{
         <div className="flex items-center space-x-4">
           <h1 className="text-lg font-semibold text-gray-800">Aurora AI Studio</h1>
           <div className="text-sm text-gray-600">Visual Workflow Designer</div>
+          {isGeneratingWorkflow && (
+            <div className="flex items-center space-x-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-blue-700">Génération du workflow en cours...</span>
+            </div>
+          )}
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" onClick={() => openAgentEditor()}>
@@ -84,7 +91,7 @@ const ToolbarComponent: React.FC<{
 function App() {
   const [showValidation, setShowValidation] = useState(true);
   const [showLandingPage, setShowLandingPage] = useState(true);
-  const { loadOpenRouterModels } = useDesignerStore();
+  const { loadOpenRouterModels, isGeneratingWorkflow } = useDesignerStore();
 
   // Load OpenRouter models on app startup
   useEffect(() => {
@@ -101,7 +108,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <ToolbarComponent showValidation={showValidation} setShowValidation={setShowValidation} />
+      <ToolbarComponent showValidation={showValidation} setShowValidation={setShowValidation} isGeneratingWorkflow={isGeneratingWorkflow} />
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
         <div className="flex-1 relative">

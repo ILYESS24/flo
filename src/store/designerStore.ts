@@ -20,6 +20,7 @@ interface DesignerState {
   isEdgeEditorOpen: boolean;
   isConfigEditorOpen: boolean;
   isRouterEditorOpen: boolean;
+  isGeneratingWorkflow: boolean;
   
   // Workflow metadata
   workflowName: string;
@@ -62,7 +63,10 @@ interface DesignerState {
   closeEdgeEditor: () => void;
   openConfigEditor: () => void;
   closeConfigEditor: () => void;
-  
+
+  // Workflow generation actions
+  setGeneratingWorkflow: (generating: boolean) => void;
+
   // Workflow metadata actions
   setWorkflowMetadata: (metadata: { name: string; description: string; version: string }) => void;
   
@@ -159,6 +163,7 @@ export const useDesignerStore = create<DesignerState>((set) => ({
   isEdgeEditorOpen: false,
   isConfigEditorOpen: false,
   isRouterEditorOpen: false,
+  isGeneratingWorkflow: false,
   workflowName: 'New Workflow',
   workflowDescription: '',
   workflowVersion: '1.0.0',
@@ -331,6 +336,9 @@ export const useDesignerStore = create<DesignerState>((set) => ({
   openConfigEditor: () => set({ isConfigEditorOpen: true }),
 
   closeConfigEditor: () => set({ isConfigEditorOpen: false }),
+
+  // Workflow generation actions
+  setGeneratingWorkflow: (generating: boolean) => set({ isGeneratingWorkflow: generating }),
 
   // Workflow metadata actions
   setWorkflowMetadata: (metadata) => {

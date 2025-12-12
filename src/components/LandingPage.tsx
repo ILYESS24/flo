@@ -16,15 +16,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const importFromYAML = useDesignerStore((state) => state.importFromYAML);
+  const setGeneratingWorkflow = useDesignerStore((state) => state.setGeneratingWorkflow);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
-    const run = async () => {
-      let shouldOpenStudio = false;
+    setIsLoading(true);
+
+    // Ouvre le studio immédiatement après 2-3 secondes pour une meilleure UX
+    setTimeout(() => {
+      onStartDesigning();
+    }, 2500); // 2.5 secondes
+
+    // Fait l'appel API en arrière-plan
+    const generateWorkflow = async () => {
       try {
-        setIsLoading(true);
+        // Indique que la génération est en cours dans le store
+        setGeneratingWorkflow(true);
+
         const response = await floAIAPI.generateStudioWorkflow({ prompt });
 
         if (response.status === 'success' && (response.data as any)?.yaml) {
@@ -34,23 +44,19 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
           } catch (yamlError) {
             console.error('Failed to import generated YAML workflow:', yamlError);
           }
-          shouldOpenStudio = true;
         } else {
           console.error('Failed to generate workflow from AI:', response.error || response.data);
-          // Ouvre quand même le studio pour ne pas bloquer l'utilisateur
-          shouldOpenStudio = true;
         }
       } catch (error) {
         console.error('AI workflow generation failed:', error);
       } finally {
+        // Arrête l'indicateur de génération
+        setGeneratingWorkflow(false);
         setIsLoading(false);
-        if (shouldOpenStudio) {
-          onStartDesigning();
-        }
       }
     };
 
-    void run();
+    void generateWorkflow();
   };
 
   const handleFileClick = () => {
