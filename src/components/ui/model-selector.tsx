@@ -56,7 +56,6 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ className }) => {
   };
 
   const getModelDisplayName = (model: OpenRouterModel) => {
-    const provider = model.id.split('/')[0];
     const modelName = model.name || model.id.split('/').slice(1).join('/');
 
     // Format context length nicely
