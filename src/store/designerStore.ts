@@ -70,6 +70,7 @@ interface DesignerState {
   // Workflow generation actions
   setGeneratingWorkflow: (generating: boolean) => void;
   setSelectedModel: (modelId: string) => void;
+  importWorkflowWithAnimation: (yamlContent: string) => Promise<void>;
 
   // Workflow metadata actions
   setWorkflowMetadata: (metadata: { name: string; description: string; version: string }) => void;
@@ -407,7 +408,7 @@ export const useDesignerStore = create<DesignerState>((set) => ({
     try {
       const { parseAriumYAML } = await import('@/utils/yamlImport');
       const result = parseAriumYAML(yamlContent);
-      
+
       set({
         nodes: result.nodes,
         edges: result.edges,
@@ -419,6 +420,70 @@ export const useDesignerStore = create<DesignerState>((set) => ({
       });
     } catch (error) {
       console.error('Failed to import YAML:', error);
+      throw error;
+    }
+  },
+
+  importWorkflowWithAnimation: async (yamlContent) => {
+    try {
+      const { parseAriumYAML } = await import('@/utils/yamlImport');
+      const result = parseAriumYAML(yamlContent);
+
+      // Clear current workflow
+      set({
+        nodes: [],
+        edges: [],
+        workflowName: result.workflowName,
+        workflowDescription: result.workflowDescription,
+        workflowVersion: result.workflowVersion,
+        selectedNode: undefined,
+        selectedEdge: undefined,
+      });
+
+      // Add nodes with staggered animation
+      for (let i = 0; i < result.nodes.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 300)); // 300ms delay between nodes
+
+        set((state) => ({
+          nodes: [...state.nodes, { ...result.nodes[i], data: { ...result.nodes[i].data, isNew: true } }],
+        }));
+
+        // Remove the "new" flag after animation
+        setTimeout(() => {
+          set((state) => ({
+            nodes: state.nodes.map(node =>
+              node.id === result.nodes[i].id
+                ? { ...node, data: { ...node.data, isNew: false } }
+                : node
+            ),
+          }));
+        }, 1000);
+      }
+
+      // Add edges with animation after all nodes are placed
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      for (let i = 0; i < result.edges.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 200)); // 200ms delay between edges
+
+        set((state) => ({
+          edges: [...state.edges, { ...result.edges[i], data: { ...result.edges[i].data, isNew: true } }],
+        }));
+
+        // Remove the "new" flag after animation
+        setTimeout(() => {
+          set((state) => ({
+            edges: state.edges.map(edge =>
+              edge.id === result.edges[i].id
+                ? { ...edge, data: { ...edge.data, isNew: false } }
+                : edge
+            ),
+          }));
+        }, 800);
+      }
+
+    } catch (error) {
+      console.error('Failed to import workflow with animation:', error);
       throw error;
     }
   },

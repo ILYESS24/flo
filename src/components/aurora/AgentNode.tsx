@@ -16,6 +16,7 @@ const AgentNode: React.FC<NodeProps<AgentNodeData>> = ({ data, selected, id }) =
   
   const isStart = startNodeId === id;
   const isEnd = endNodeIds.includes(id);
+  const isNew = data.isNew;
 
   const handleEdit = () => {
     openAgentEditor({
@@ -32,6 +33,7 @@ const AgentNode: React.FC<NodeProps<AgentNodeData>> = ({ data, selected, id }) =
 
   return (
     <div
+      data-is-new={isNew}
       className={cn(
         "relative bg-white border-2 rounded-lg shadow-lg min-w-[200px] max-w-[250px]",
         selected ? "border-blue-500" : "border-gray-300",

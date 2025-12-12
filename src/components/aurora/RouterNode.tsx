@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const RouterNode: React.FC<NodeProps<RouterNodeData>> = ({ data, selected, id }) => {
   const { openRouterEditor, deleteNode } = useDesignerStore();
-  const { router, isEnd } = data;
+  const { router, isEnd, isNew } = data;
 
   const handleEdit = () => {
     openRouterEditor({
@@ -58,6 +58,7 @@ const RouterNode: React.FC<NodeProps<RouterNodeData>> = ({ data, selected, id })
 
   return (
     <div
+      data-is-new={isNew}
       className={cn(
         "relative bg-white border-2 rounded-lg shadow-lg min-w-[200px] max-w-[250px]",
         selected ? "border-purple-500" : "border-gray-300",

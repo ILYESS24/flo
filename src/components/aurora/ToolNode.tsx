@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const ToolNode: React.FC<NodeProps<ToolNodeData>> = ({ data, selected, id }) => {
   const { deleteNode } = useDesignerStore();
-  const { tool, isEnd } = data;
+  const { tool, isEnd, isNew } = data;
 
   const handleDelete = () => {
     deleteNode(id);
@@ -15,6 +15,7 @@ const ToolNode: React.FC<NodeProps<ToolNodeData>> = ({ data, selected, id }) => 
 
   return (
     <div
+      data-is-new={isNew}
       className={cn(
         "relative bg-white border-2 rounded-lg shadow-lg min-w-[180px] max-w-[220px]",
         selected ? "border-orange-500" : "border-gray-300",

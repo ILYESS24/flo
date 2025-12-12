@@ -69,3 +69,70 @@
     font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 }
+
+/* Workflow Animation Styles */
+@keyframes node-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes edge-draw {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 100;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+}
+
+/* Apply animations to new workflow elements */
+.react-flow__node[data-is-new="true"] {
+  animation: node-appear 0.8s ease-out forwards, pulse-glow 2s ease-in-out 0.5s;
+}
+
+.react-flow__edge[data-is-new="true"] path {
+  stroke-dasharray: 10;
+  animation: edge-draw 1s ease-out forwards;
+}
+
+.react-flow__edge[data-is-new="true"] .react-flow__edge-path {
+  stroke-dasharray: 10;
+  animation: edge-draw 1s ease-out forwards;
+}
+
+/* Enhanced visual feedback */
+.workflow-generating {
+  background: linear-gradient(45deg, #3b82f6, #1d4ed8, #1e40af);
+  background-size: 400% 400%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

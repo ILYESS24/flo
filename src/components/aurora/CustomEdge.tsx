@@ -20,6 +20,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   data,
   selected,
 }) => {
+  const isNew = data?.isNew;
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -63,6 +64,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
           strokeWidth: selected ? 3 : 2,
           markerEnd: `url(#${markerId})`,
         }}
+        data-is-new={isNew}
       />
       {data?.router && (
         <EdgeLabelRenderer>

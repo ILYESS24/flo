@@ -16,7 +16,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const importFromYAML = useDesignerStore((state) => state.importFromYAML);
+  const importWorkflowWithAnimation = useDesignerStore((state) => state.importWorkflowWithAnimation);
   const setGeneratingWorkflow = useDesignerStore((state) => state.setGeneratingWorkflow);
   const selectedModelId = useDesignerStore((state) => state.selectedModelId);
 
@@ -42,7 +42,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
         if (response.status === 'success' && (response.data as any)?.yaml) {
           const yamlContent = (response.data as any).yaml as string;
           try {
-            await importFromYAML(yamlContent);
+            await importWorkflowWithAnimation(yamlContent);
           } catch (yamlError) {
             console.error('Failed to import generated YAML workflow:', yamlError);
           }
