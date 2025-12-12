@@ -21,6 +21,9 @@ interface DesignerState {
   isConfigEditorOpen: boolean;
   isRouterEditorOpen: boolean;
   isGeneratingWorkflow: boolean;
+
+  // Model selection state
+  selectedModelId: string;
   
   // Workflow metadata
   workflowName: string;
@@ -66,6 +69,7 @@ interface DesignerState {
 
   // Workflow generation actions
   setGeneratingWorkflow: (generating: boolean) => void;
+  setSelectedModel: (modelId: string) => void;
 
   // Workflow metadata actions
   setWorkflowMetadata: (metadata: { name: string; description: string; version: string }) => void;
@@ -164,6 +168,7 @@ export const useDesignerStore = create<DesignerState>((set) => ({
   isConfigEditorOpen: false,
   isRouterEditorOpen: false,
   isGeneratingWorkflow: false,
+  selectedModelId: 'openai/gpt-4o', // Default model
   workflowName: 'New Workflow',
   workflowDescription: '',
   workflowVersion: '1.0.0',
@@ -339,6 +344,7 @@ export const useDesignerStore = create<DesignerState>((set) => ({
 
   // Workflow generation actions
   setGeneratingWorkflow: (generating: boolean) => set({ isGeneratingWorkflow: generating }),
+  setSelectedModel: (modelId: string) => set({ selectedModelId: modelId }),
 
   // Workflow metadata actions
   setWorkflowMetadata: (metadata) => {

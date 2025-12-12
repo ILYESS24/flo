@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ShaderAnimation } from '@/components/shader-animation';
 import { Typewriter } from '@/components/ui/typewriter';
+import { ModelSelector } from '@/components/ui/model-selector';
 import { Link2, CornerDownLeft } from 'lucide-react';
 import floAIAPI from '@/lib/api';
 import { useDesignerStore } from '@/store/designerStore';
@@ -17,6 +18,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   const [isLoading, setIsLoading] = useState(false);
   const importFromYAML = useDesignerStore((state) => state.importFromYAML);
   const setGeneratingWorkflow = useDesignerStore((state) => state.setGeneratingWorkflow);
+  const selectedModelId = useDesignerStore((state) => state.selectedModelId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
         // Indique que la génération est en cours dans le store
         setGeneratingWorkflow(true);
 
-        const response = await floAIAPI.generateStudioWorkflow({ prompt });
+        const response = await floAIAPI.generateStudioWorkflow({ prompt, model: selectedModelId });
 
         if (response.status === 'success' && (response.data as any)?.yaml) {
           const yamlContent = (response.data as any).yaml as string;
@@ -90,44 +92,52 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
         </div>
 
         {/* Prompt Bar (like screenshot) */}
-        <form onSubmit={handleSubmit} className="w-full max-w-3xl">
-          <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3">
-            {/* Left icons */}
-            <div className="flex items-center gap-4 text-neutral-400">
-              <button
-                type="button"
-                onClick={handleFileClick}
-                className="hover:text-neutral-200 transition-colors"
-              >
-                <Link2 className="w-4 h-4" />
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleFilesChange}
-              />
+        <form onSubmit={handleSubmit} className="w-full max-w-4xl">
+          <div className="flex flex-col gap-3">
+            {/* Model Selector Row */}
+            <div className="flex justify-center">
+              <ModelSelector />
             </div>
 
-            {/* Prompt input */}
-            <input
-              type="text"
-              placeholder=""
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent border-0 outline-none text-base text-neutral-100"
-            />
+            {/* Main Prompt Bar */}
+            <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3">
+              {/* Left icons */}
+              <div className="flex items-center gap-4 text-neutral-400">
+                <button
+                  type="button"
+                  onClick={handleFileClick}
+                  className="hover:text-neutral-200 transition-colors"
+                >
+                  <Link2 className="w-4 h-4" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleFilesChange}
+                />
+              </div>
 
-            {/* Send button */}
-            <Button
-              type="submit"
-              size="icon"
-              disabled={isLoading}
-              className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black"
-            >
-              <CornerDownLeft className="w-4 h-4" />
-            </Button>
+              {/* Prompt input */}
+              <input
+                type="text"
+                placeholder=""
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="flex-1 bg-transparent border-0 outline-none text-base text-neutral-100"
+              />
+
+              {/* Send button */}
+              <Button
+                type="submit"
+                size="icon"
+                disabled={isLoading}
+                className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black"
+              >
+                <CornerDownLeft className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </form>
 

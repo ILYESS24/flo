@@ -20,6 +20,7 @@ export interface SimpleWorkflowRequest {
 
 export interface StudioAIWorkflowRequest {
   prompt: string;
+  model?: string;
 }
 
 export interface APIResponse<T = any> {
