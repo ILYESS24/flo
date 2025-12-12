@@ -9,23 +9,60 @@ import { useDesignerStore } from '@/store/designerStore';
 
 // Styles personnalisés pour forcer les bordures noires sur toute la landing page
 const landingPageStyles = `
-  .landing-page :global(.border-input) {
+  .landing-page * {
+    border-color: black !important;
+  }
+  .landing-page button {
     border-color: black !important;
   }
   .landing-page button:focus {
     border-color: black !important;
-    box-shadow: 0 0 0 1px black !important;
+    box-shadow: 0 0 0 2px black !important;
     outline: none !important;
+    ring-color: black !important;
+  }
+  .landing-page input {
+    border-color: black !important;
   }
   .landing-page input:focus {
     border-color: black !important;
-    box-shadow: 0 0 0 1px black !important;
+    box-shadow: 0 0 0 2px black !important;
     outline: none !important;
+    ring-color: black !important;
+  }
+  .landing-page [data-radix-select-trigger] {
+    border-color: black !important;
   }
   .landing-page [data-radix-select-trigger]:focus {
     border-color: black !important;
-    box-shadow: 0 0 0 1px black !important;
+    box-shadow: 0 0 0 2px black !important;
     outline: none !important;
+    ring-color: black !important;
+  }
+  .landing-page [data-radix-select-content] {
+    border-color: black !important;
+  }
+  .landing-page :focus-visible {
+    outline: none !important;
+    border-color: black !important;
+    box-shadow: 0 0 0 2px black !important;
+  }
+  .landing-page .border {
+    border-color: black !important;
+  }
+  .landing-page .ring-blue-500,
+  .landing-page .ring-blue-600,
+  .landing-page .ring-blue-700,
+  .landing-page .ring-blue-800,
+  .landing-page .ring-blue-900 {
+    --tw-ring-color: black !important;
+  }
+  .landing-page .border-blue-500,
+  .landing-page .border-blue-600,
+  .landing-page .border-blue-700,
+  .landing-page .border-blue-800,
+  .landing-page .border-blue-900 {
+    border-color: black !important;
   }
 `;
 
@@ -129,7 +166,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                   </div>
 
                   {/* Main Prompt Bar */}
-                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3">
+                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3" style={{ borderColor: 'black' }}>
                     {/* Left icons */}
                     <div className="flex items-center gap-4 text-neutral-400">
                       <button
@@ -163,6 +200,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                 size="icon"
                 disabled={isLoading}
                 className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black focus:border-black focus:ring-0 focus:ring-black !border-black"
+                style={{ borderColor: 'black' }}
               >
                       <CornerDownLeft className="w-4 h-4" />
                     </Button>
@@ -171,7 +209,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               </form>
 
               {files.length > 0 && (
-                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-8 border-black rounded-lg px-3 py-2 bg-black">
+                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-8 border-black rounded-lg px-3 py-2 bg-black" style={{ borderColor: 'black' }}>
                   {files.length === 1
                     ? `1 fichier ajouté : ${files[0].name}`
                     : `${files.length} fichiers ajoutés`}
