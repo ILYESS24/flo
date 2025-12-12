@@ -85,12 +85,12 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ className }) => {
     <div className={`flex items-center gap-2 ${className}`}>
       <Brain className="w-4 h-4 text-neutral-500" />
       <Select value={selectedModelId} onValueChange={handleModelChange} disabled={isLoading}>
-        <SelectTrigger className="h-9 bg-neutral-900 border-4 border-black text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 min-w-[200px]">
-          <SelectValue placeholder={isLoading ? "Chargement..." : "Sélectionner un modèle"}>
+        <SelectTrigger className="h-9 bg-neutral-900 border-4 border-black text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 focus:border-black min-w-[200px]">
+          <SelectValue placeholder={isLoading ? "Chargement..." : "Model AI"}>
             {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="max-h-[400px] bg-neutral-900 border border-black">
+        <SelectContent className="max-h-[400px] bg-neutral-900 border-4 border-black">
           {Object.entries(groupedModels).map(([provider, providerModels]) => (
             <div key={provider}>
               <div className="px-2 py-1.5 text-xs font-semibold text-neutral-400 uppercase tracking-wide border-b border-neutral-700">
