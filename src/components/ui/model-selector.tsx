@@ -6,6 +6,21 @@ import { OpenRouterModel } from '@/lib/openrouter';
 import { config } from '@/lib/config';
 import { Brain, Loader2 } from 'lucide-react';
 
+// Styles personnalisés pour forcer les bordures noires
+const customSelectStyles = `
+  [data-radix-select-trigger] {
+    border-color: black !important;
+  }
+  [data-radix-select-trigger]:focus {
+    border-color: black !important;
+    box-shadow: 0 0 0 1px black !important;
+    outline: none !important;
+  }
+  [data-radix-select-content] {
+    border-color: black !important;
+  }
+`;
+
 interface ModelSelectorProps {
   className?: string;
 }
@@ -82,15 +97,17 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ className }) => {
   }
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: customSelectStyles }} />
+      <div className={`flex items-center gap-2 ${className}`}>
       <Brain className="w-4 h-4 text-neutral-500" />
       <Select value={selectedModelId} onValueChange={handleModelChange} disabled={isLoading}>
-        <SelectTrigger className="h-9 bg-neutral-900 border-4 border-black text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 focus:border-black min-w-[200px]">
+        <SelectTrigger className="h-9 bg-neutral-900 border-4 border-black text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 focus:border-black focus:ring-black focus:outline-none min-w-[200px] !border-black !ring-0 !ring-black">
           <SelectValue placeholder={isLoading ? "Chargement..." : "Model AI"}>
             {isLoading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="max-h-[400px] bg-neutral-900 border-4 border-black">
+        <SelectContent className="max-h-[400px] bg-neutral-900 border-4 border-black !border-black">
           {Object.entries(groupedModels).map(([provider, providerModels]) => (
             <div key={provider}>
               <div className="px-2 py-1.5 text-xs font-semibold text-neutral-400 uppercase tracking-wide border-b border-neutral-700">
@@ -117,5 +134,6 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({ className }) => {
         </SelectContent>
       </Select>
     </div>
+    </>
   );
 };
