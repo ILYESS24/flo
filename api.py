@@ -48,6 +48,7 @@ class SimpleWorkflowRequest(BaseModel):
 
 class StudioAIWorkflowRequest(BaseModel):
     prompt: str
+    model: Optional[str] = "openai/gpt-4o"
 
 @app.get("/")
 async def root():
@@ -112,29 +113,20 @@ async def generate_studio_workflow(request: StudioAIWorkflowRequest):
     """
     Generate an Aurora YAML workflow from a natural language description.
 
-    This uses the configured LLM (OpenAI-compatible, e.g. OpenAI or DeepSeek)
-    with the API key provided in environment variables.
+    This uses OpenRouter API with the configured key for maximum model availability.
     """
     try:
-        # Prefer DeepSeek if configured, otherwise fall back to OpenAI
-        deepseek_key = os.getenv("DEEPSEEK_API_KEY")
-        openai_key = os.getenv("OPENAI_API_KEY")
+        # Use OpenRouter API key (configured for all models)
+        openrouter_key = os.getenv("OPENROUTER_API_KEY", "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")
 
-        if deepseek_key:
-            # DeepSeek is OpenAI-compatible but uses its own base URL and model name
-            llm = OpenAI(
-                model=os.getenv("DEEPSEEK_MODEL", "deepseek-chat"),
-                api_key=deepseek_key,
-                temperature=0.2,
-                base_url=os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
-            )
-        elif openai_key:
-            llm = OpenAI(model="gpt-4o-mini", api_key=openai_key, temperature=0.2)
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail="No LLM API key configured (set DEEPSEEK_API_KEY or OPENAI_API_KEY)",
-            )
+        # Create OpenRouter-compatible LLM (OpenRouter uses OpenAI-compatible API)
+        selected_model = request.model or "openai/gpt-4o"
+        llm = OpenAI(
+            model=selected_model,  # Use the model selected by the user
+            api_key=openrouter_key,
+            temperature=0.2,
+            base_url="https://openrouter.ai/api/v1",  # OpenRouter base URL
+        )
 
         system_prompt = """
 You are an expert AI workflow architect for Aurora AI Studio.
