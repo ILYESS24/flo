@@ -7,6 +7,28 @@ import { Link2, CornerDownLeft } from 'lucide-react';
 import floAIAPI from '@/lib/api';
 import { useDesignerStore } from '@/store/designerStore';
 
+// Styles personnalisés pour forcer les bordures noires sur toute la landing page
+const landingPageStyles = `
+  .landing-page :global(.border-input) {
+    border-color: black !important;
+  }
+  .landing-page button:focus {
+    border-color: black !important;
+    box-shadow: 0 0 0 1px black !important;
+    outline: none !important;
+  }
+  .landing-page input:focus {
+    border-color: black !important;
+    box-shadow: 0 0 0 1px black !important;
+    outline: none !important;
+  }
+  .landing-page [data-radix-select-trigger]:focus {
+    border-color: black !important;
+    box-shadow: 0 0 0 1px black !important;
+    outline: none !important;
+  }
+`;
+
 interface LandingPageProps {
   onStartDesigning: () => void;
 }
@@ -73,7 +95,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden">
+    <>
+      <style dangerouslySetInnerHTML={{ __html: landingPageStyles }} />
+      <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden landing-page">
       {/* Bordure extérieure - effet de carte flottante */}
       <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px' }}>
         <div className="w-full h-full bg-black rounded-[35px] shadow-2xl">
@@ -134,12 +158,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                     />
 
                     {/* Send button */}
-                    <Button
-                      type="submit"
-                      size="icon"
-                      disabled={isLoading}
-                      className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black"
-                    >
+              <Button
+                type="submit"
+                size="icon"
+                disabled={isLoading}
+                className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black focus:border-black focus:ring-0 focus:ring-black !border-black"
+              >
                       <CornerDownLeft className="w-4 h-4" />
                     </Button>
                   </div>
@@ -158,6 +182,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
