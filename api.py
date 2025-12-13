@@ -8,6 +8,7 @@ import os
 import asyncio
 from typing import Optional, Dict, Any
 import json
+import httpx
 
 # Aurora AI imports
 from aurora_ai.builder.agent_builder import AgentBuilder
@@ -65,6 +66,7 @@ async def health():
             "openai": bool(os.getenv("OPENAI_API_KEY")),
             "anthropic": bool(os.getenv("ANTHROPIC_API_KEY")),
             "gemini": bool(os.getenv("GOOGLE_API_KEY")),
+            "openrouter": bool(os.getenv("OPENROUTER_API_KEY")),
         }
     }
 
@@ -74,7 +76,12 @@ async def chat_with_agent(request: AgentRequest):
     try:
         # Create LLM based on provider
         llm = None
-        if request.provider == "openai":
+        if request.provider == "openrouter":
+            api_key = os.getenv("OPENROUTER_API_KEY")
+            if not api_key:
+                raise HTTPException(status_code=400, detail="OpenRouter API key not configured")
+            llm = OpenAI(model=request.model, temperature=request.temperature, api_key=api_key, base_url="https://openrouter.ai/api/v1")
+        elif request.provider == "openai":
             api_key = os.getenv("OPENAI_API_KEY")
             if not api_key:
                 raise HTTPException(status_code=400, detail="OpenAI API key not configured")
@@ -113,20 +120,63 @@ async def generate_studio_workflow(request: StudioAIWorkflowRequest):
     """
     Generate an Aurora YAML workflow from a natural language description.
 
-    This uses OpenRouter API with the configured key for maximum model availability.
+    Uses OpenRouter API if available, otherwise falls back to OpenAI.
     """
     try:
-        # Use OpenRouter API key (configured for all models)
-        openrouter_key = os.getenv("OPENROUTER_API_KEY", "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")
-
-        # Create OpenRouter-compatible LLM (OpenRouter uses OpenAI-compatible API)
         selected_model = request.model or "openai/gpt-4o"
-        llm = OpenAI(
-            model=selected_model,  # Use the model selected by the user
-            api_key=openrouter_key,
-            temperature=0.2,
-            base_url="https://openrouter.ai/api/v1",  # OpenRouter base URL
-        )
+
+        # Check OpenRouter API key (ONLY OpenRouter, no fallback)
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        
+        # Debug: log which keys are available (without showing the actual key)
+        print(f"OpenRouter key configured: {bool(openrouter_key)}")
+        print(f"Selected model: {selected_model}")
+        
+        if not openrouter_key:
+            raise HTTPException(
+                status_code=400, 
+                detail="OPENROUTER_API_KEY environment variable is required. Please set it to use OpenRouter API."
+            )
+        
+        # Use OpenRouter ONLY
+        print(f"Using OpenRouter with model: {selected_model}")
+        print(f"OpenRouter API key (first 10 chars): {openrouter_key[:10]}...")
+        
+        # OpenRouter requires specific headers
+        # The SDK OpenAI might normalize "HTTP-Referer" to "Referer", so we'll use both
+        custom_headers = {
+            "HTTP-Referer": os.getenv("OPENROUTER_REFERER", "https://github.com/flo-ai/aurora-ai"),
+            "Referer": os.getenv("OPENROUTER_REFERER", "https://github.com/flo-ai/aurora-ai"),  # Fallback
+            "X-Title": os.getenv("OPENROUTER_TITLE", "Aurora AI Studio"),
+        }
+        
+        try:
+            llm = OpenAI(
+                model=selected_model,
+                api_key=openrouter_key,
+                temperature=0.2,
+                base_url="https://openrouter.ai/api/v1",
+                custom_headers=custom_headers
+            )
+            
+            # Debug: Check if headers are set
+            if hasattr(llm, 'client'):
+                print(f"✅ OpenRouter LLM client created")
+                # Try to verify headers are set
+                if hasattr(llm.client, '_client'):
+                    print(f"✅ Underlying client accessible")
+                if hasattr(llm.client, 'default_headers'):
+                    print(f"✅ Default headers: {llm.client.default_headers}")
+            
+            print("✅ OpenRouter LLM initialized successfully")
+        except Exception as init_error:
+            print(f"❌ Failed to initialize OpenRouter LLM: {init_error}")
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to initialize OpenRouter: {str(init_error)}"
+            )
 
         system_prompt = """
 You are an expert AI workflow architect for Aurora AI Studio.
@@ -168,13 +218,103 @@ Rules:
             {"role": "user", "content": request.prompt},
         ]
 
-        yaml_workflow = await llm.generate(messages)  # type: ignore[arg-type]
+        # Generate with OpenRouter - try SDK first, fallback to direct API
+        yaml_workflow = None
+        sdk_failed = False
+        
+        # Try SDK first
+        try:
+            print("🔄 Attempting generation with OpenAI SDK...")
+            yaml_workflow = await llm.generate(messages)  # type: ignore[arg-type]
+            print("✅ SDK generation succeeded!")
+        except Exception as llm_error:
+            # Log the error for debugging
+            error_str = str(llm_error)
+            print(f"❌ SDK generation failed: {error_str}")
+            print(f"Error type: {type(llm_error)}")
+            sdk_failed = True
+            
+            # Always try direct API call as fallback if SDK fails
+            print("⚠️ SDK failed, trying direct API call to OpenRouter...")
+            try:
+                # Direct API call to OpenRouter
+                async with httpx.AsyncClient(timeout=60.0) as client:
+                    openrouter_headers = {
+                        "Authorization": f"Bearer {openrouter_key}",
+                        "HTTP-Referer": os.getenv("OPENROUTER_REFERER", "https://github.com/flo-ai/aurora-ai"),
+                        "X-Title": os.getenv("OPENROUTER_TITLE", "Aurora AI Studio"),
+                        "Content-Type": "application/json",
+                    }
+                    
+                    print(f"📡 Calling OpenRouter API directly with model: {selected_model}")
+                    response = await client.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        headers=openrouter_headers,
+                        json={
+                            "model": selected_model,
+                            "messages": messages,
+                            "temperature": 0.2,
+                        },
+                        timeout=60.0
+                    )
+                    
+                    print(f"📥 Response status: {response.status_code}")
+                    
+                    if response.status_code == 200:
+                        result = response.json()
+                        yaml_workflow = result["choices"][0]["message"]["content"]
+                        print("✅ Direct API call succeeded!")
+                    else:
+                        error_detail = response.text
+                        print(f"❌ OpenRouter API error: {error_detail}")
+                        raise HTTPException(
+                            status_code=response.status_code,
+                            detail=f"OpenRouter API error: {error_detail}"
+                        )
+            except httpx.TimeoutException:
+                print("❌ OpenRouter API timeout")
+                raise HTTPException(
+                    status_code=504,
+                    detail="OpenRouter API timeout. Please try again."
+                )
+            except httpx.RequestError as req_error:
+                print(f"❌ OpenRouter API connection error: {req_error}")
+                raise HTTPException(
+                    status_code=503,
+                    detail=f"OpenRouter API connection error: {str(req_error)}"
+                )
+            except HTTPException:
+                raise
+            except Exception as direct_error:
+                print(f"❌ Direct API call failed: {direct_error}")
+                import traceback
+                traceback.print_exc()
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"OpenRouter API error: {str(direct_error)}"
+                )
+        
+        if yaml_workflow is None:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to generate workflow with OpenRouter"
+            )
 
         # Ensure it's a plain string
         if isinstance(yaml_workflow, dict):
             yaml_text = json.dumps(yaml_workflow)
         else:
             yaml_text = str(yaml_workflow)
+
+        # Clean YAML: remove markdown code fences if present
+        yaml_text = yaml_text.strip()
+        if yaml_text.startswith('```yaml'):
+            yaml_text = yaml_text[7:].strip()
+        elif yaml_text.startswith('```'):
+            yaml_text = yaml_text[3:].strip()
+        if yaml_text.endswith('```'):
+            yaml_text = yaml_text[:-3].strip()
+        yaml_text = yaml_text.strip()
 
         return {"status": "success", "yaml": yaml_text}
 
