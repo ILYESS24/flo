@@ -20,11 +20,6 @@ const landingPageStyles = `
   }
   .landing-page form {
     border-color: black !important;
-    border: 2px solid black !important;
-  }
-  .landing-page form > div {
-    border-color: black !important;
-    border: 1px solid black !important;
   }
   .landing-page button,
   .landing-page button * {
@@ -43,13 +38,9 @@ const landingPageStyles = `
   .landing-page input * {
     border-color: black !important;
   }
-  .landing-page input:not([type="file"]):not([type="hidden"]) {
-    border: 1px solid black !important;
-  }
   .landing-page input:focus,
   .landing-page input:focus-visible {
     border-color: black !important;
-    border: 2px solid black !important;
     box-shadow: 0 0 0 2px black !important;
     outline: 2px solid black !important;
     outline-offset: 0 !important;
@@ -102,12 +93,6 @@ const landingPageStyles = `
     border-color: black !important;
   }
   .landing-page [class*="rounded"] {
-    border-color: black !important;
-  }
-  .landing-page .flex {
-    border-color: black !important;
-  }
-  .landing-page .text-center {
     border-color: black !important;
   }
 `;
@@ -234,9 +219,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
           {/* Contenu intérieur avec espace */}
           <div className="w-full h-full rounded-[30px] overflow-hidden relative" style={{ border: '2px solid black' }}>
             <ShaderAnimation />
-            <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4" style={{ border: '2px solid black', borderRadius: '8px', padding: '16px' }}>
+            <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
               {/* Logo + Tagline */}
-              <div className="text-center space-y-4" style={{ border: '1px solid black', borderRadius: '4px', padding: '8px' }}>
+              <div className="text-center space-y-4">
                 <Typewriter
                   text={[
                     'Stop building complex workflows, one prompt is enough',
@@ -251,22 +236,21 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               </div>
 
               {/* Prompt Bar (like screenshot) */}
-              <form onSubmit={handleSubmit} className="w-full max-w-4xl" style={{ border: '2px solid black', borderRadius: '8px', padding: '8px' }}>
-                <div className="flex flex-col gap-3" style={{ border: '1px solid black', borderRadius: '4px', padding: '4px' }}>
+              <form onSubmit={handleSubmit} className="w-full max-w-4xl">
+                <div className="flex flex-col gap-3">
                   {/* Model Selector Row */}
-                  <div className="flex justify-center" style={{ border: '1px solid black', borderRadius: '4px', padding: '4px' }}>
+                  <div className="flex justify-center">
                     <ModelSelector />
                   </div>
 
                   {/* Main Prompt Bar */}
                   <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3" style={{ borderColor: 'black', border: '4px solid black' }}>
                     {/* Left icons */}
-                    <div className="flex items-center gap-4 text-neutral-400" style={{ border: '1px solid black', borderRadius: '4px', padding: '4px' }}>
+                    <div className="flex items-center gap-4 text-neutral-400">
                       <button
                         type="button"
                         onClick={handleFileClick}
                         className="hover:text-neutral-200 transition-colors"
-                        style={{ border: '1px solid black', borderRadius: '4px', padding: '4px' }}
                       >
                         <Link2 className="w-4 h-4" />
                       </button>
@@ -286,7 +270,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
                       className="flex-1 bg-transparent border-0 outline-none text-base text-neutral-100"
-                      style={{ border: '1px solid black', borderRadius: '4px', padding: '8px' }}
                     />
 
                     {/* Send button */}
