@@ -32,32 +32,51 @@ export interface OpenRouterModelsResponse {
 class OpenRouterService {
   private apiKey: string;
   private baseURL = 'https://openrouter.ai/api/v1';
+  private modelsCache: OpenRouterModel[] | null = null;
+  private cacheTimestamp = 0;
+  private cacheDuration = 5 * 60 * 1000; // 5 minutes
 
   constructor(apiKey?: string) {
-    // Get API key from environment or use provided one
     this.apiKey = apiKey || (import.meta as any).env?.VITE_OPENROUTER_API_KEY || '';
   }
 
   /**
-   * Fetch all available models from OpenRouter
+   * Fetch all available models from OpenRouter with caching
    */
   async fetchModels(): Promise<OpenRouterModel[]> {
+    // Return cached data if still valid
+    if (this.modelsCache && Date.now() - this.cacheTimestamp < this.cacheDuration) {
+      return this.modelsCache;
+    }
+
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       const response = await fetch(`${this.baseURL}/models`, {
         method: 'GET',
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
           ...(this.apiKey && { 'Authorization': `Bearer ${this.apiKey}` }),
         },
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error(`OpenRouter API error: ${response.status} ${response.statusText}`);
+        throw new Error(`OpenRouter API error: ${response.status}`);
       }
 
       const data: OpenRouterModelsResponse = await response.json();
-      return data.data || [];
+      this.modelsCache = data.data || [];
+      this.cacheTimestamp = Date.now();
+      return this.modelsCache;
     } catch (error) {
+      // Return cached data on error if available
+      if (this.modelsCache) {
+        return this.modelsCache;
+      }
       console.error('Failed to fetch OpenRouter models:', error);
       throw error;
     }
