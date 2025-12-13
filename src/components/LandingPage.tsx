@@ -7,94 +7,9 @@ import { Link2, CornerDownLeft } from 'lucide-react';
 import floAIAPI from '@/lib/api';
 import { useDesignerStore } from '@/store/designerStore';
 
-// Styles personnalisés pour forcer les bordures noires sur toute la landing page
+// Styles personnalisés pour la landing page
 const landingPageStyles = `
-  .landing-page,
-  .landing-page *,
-  .landing-page *::before,
-  .landing-page *::after {
-    border-color: black !important;
-  }
-  .landing-page div {
-    border-color: black !important;
-  }
-  .landing-page form {
-    border-color: black !important;
-  }
-  .landing-page button,
-  .landing-page button * {
-    border-color: black !important;
-  }
-  .landing-page button:focus,
-  .landing-page button:focus-visible,
-  .landing-page button:hover {
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-    outline: 2px solid black !important;
-    outline-offset: 0 !important;
-    ring-color: black !important;
-  }
-  .landing-page input,
-  .landing-page input * {
-    border-color: black !important;
-  }
-  .landing-page input:focus,
-  .landing-page input:focus-visible {
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-    outline: 2px solid black !important;
-    outline-offset: 0 !important;
-    ring-color: black !important;
-  }
-  .landing-page [data-radix-select-trigger],
-  .landing-page [data-radix-select-trigger] * {
-    border-color: black !important;
-  }
-  .landing-page [data-radix-select-trigger]:focus,
-  .landing-page [data-radix-select-trigger]:focus-visible {
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-    outline: 2px solid black !important;
-    outline-offset: 0 !important;
-    ring-color: black !important;
-  }
-  .landing-page [data-radix-select-content],
-  .landing-page [data-radix-select-content] * {
-    border-color: black !important;
-  }
-  .landing-page [data-radix-select-item] {
-    border-color: black !important;
-  }
-  .landing-page :focus-visible {
-    outline: 2px solid black !important;
-    outline-offset: 0 !important;
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-  }
-  .landing-page .border,
-  .landing-page [class*="border"] {
-    border-color: black !important;
-  }
-  .landing-page .ring-blue-500,
-  .landing-page .ring-blue-600,
-  .landing-page .ring-blue-700,
-  .landing-page .ring-blue-800,
-  .landing-page .ring-blue-900,
-  .landing-page [class*="ring-blue"] {
-    --tw-ring-color: black !important;
-    ring-color: black !important;
-  }
-  .landing-page .border-blue-500,
-  .landing-page .border-blue-600,
-  .landing-page .border-blue-700,
-  .landing-page .border-blue-800,
-  .landing-page .border-blue-900,
-  .landing-page [class*="border-blue"] {
-    border-color: black !important;
-  }
-  .landing-page [class*="rounded"] {
-    border-color: black !important;
-  }
+  /* Styles de base sans bordures forcées */
 `;
 
 interface LandingPageProps {
@@ -212,12 +127,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: landingPageStyles }} />
-      <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden landing-page" style={{ border: '4px solid black' }}>
+      <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden landing-page">
       {/* Bordure extérieure - effet de carte flottante */}
-      <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px', border: '4px solid black' }}>
-        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl" style={{ border: '4px solid black' }}>
+      <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px' }}>
+        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl">
           {/* Contenu intérieur avec espace */}
-          <div className="w-full h-full rounded-[30px] overflow-hidden relative" style={{ border: '2px solid black' }}>
+          <div className="w-full h-full rounded-[30px] overflow-hidden relative">
             <ShaderAnimation />
             <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
               {/* Logo + Tagline */}
@@ -244,7 +159,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                   </div>
 
                   {/* Main Prompt Bar */}
-                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3" style={{ borderColor: 'black', border: '4px solid black' }}>
+                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 px-6 py-3">
                     {/* Left icons */}
                     <div className="flex items-center gap-4 text-neutral-400">
                       <button
@@ -277,8 +192,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                 type="submit"
                 size="icon"
                 disabled={isLoading}
-                className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black focus:border-black focus:ring-0 focus:ring-black !border-black"
-                style={{ borderColor: 'black', border: '4px solid black' }}
+                className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200"
               >
                       <CornerDownLeft className="w-4 h-4" />
                     </Button>
@@ -287,7 +201,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               </form>
 
               {files.length > 0 && (
-                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-8 border-black rounded-lg px-3 py-2 bg-black" style={{ borderColor: 'black', border: '4px solid black' }}>
+                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 rounded-lg px-3 py-2 bg-black">
                   {files.length === 1
                     ? `1 fichier ajouté : ${files[0].name}`
                     : `${files.length} fichiers ajoutés`}
