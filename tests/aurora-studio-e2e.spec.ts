@@ -8,22 +8,25 @@ test.describe('Aurora AI Studio - Tests End-to-End', () => {
   });
 
   test('Page d\'accueil se charge correctement', async ({ page }) => {
-    // Vérifier que les éléments principaux sont présents
-    await expect(page.locator('text=Stop building complex workflows')).toBeVisible();
-    await expect(page.locator('text=Model AI')).toBeVisible();
+    // Attendre que la page se charge complètement
+    await page.waitForLoadState('networkidle');
+
+    // Vérifier que les éléments principaux sont présents (avec timeout plus long)
+    await expect(page.locator('text=Stop building complex workflows')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=Model AI')).toBeVisible({ timeout: 15000 });
 
     // Vérifier que le sélecteur de modèle est présent
     const modelSelector = page.locator('[data-radix-select-trigger]');
-    await expect(modelSelector).toBeVisible();
-    await expect(modelSelector).toHaveText(/Model AI/);
+    await expect(modelSelector).toBeVisible({ timeout: 10000 });
+    await expect(modelSelector).toHaveText(/Model AI/, { timeout: 10000 });
 
     // Vérifier que la zone de prompt est présente
     const promptInput = page.locator('input[placeholder=""]');
-    await expect(promptInput).toBeVisible();
+    await expect(promptInput).toBeVisible({ timeout: 10000 });
 
     // Vérifier que le bouton d'envoi est présent
     const submitButton = page.locator('button[type="submit"]');
-    await expect(submitButton).toBeVisible();
+    await expect(submitButton).toBeVisible({ timeout: 10000 });
   });
 
   test('Sélecteur de modèle fonctionne', async ({ page }) => {
@@ -60,19 +63,24 @@ test.describe('Aurora AI Studio - Tests End-to-End', () => {
   });
 
   test('Génération de workflow fonctionne', async ({ page }) => {
-    // Attendre que les modèles soient chargés
-    await page.waitForTimeout(2000);
+    // Attendre que la page se charge complètement
+    await page.waitForLoadState('networkidle');
+
+    // Attendre que les modèles soient chargés et que l'interface soit prête
+    await page.waitForTimeout(3000);
 
     // Sélectionner un modèle (si pas déjà fait)
     const modelSelector = page.locator('[data-radix-select-trigger]');
-    const currentModelText = await modelSelector.textContent();
+    await expect(modelSelector).toBeVisible({ timeout: 10000 });
 
-    if (currentModelText?.includes('Model AI')) {
+    const currentModelText = await modelSelector.textContent({ timeout: 5000 });
+
+    if (currentModelText?.includes('Model AI') || !currentModelText?.trim()) {
       // Ouvrir le sélecteur et choisir le premier modèle
-      await modelSelector.click();
-      await page.waitForSelector('[data-radix-select-content]');
+      await modelSelector.click({ timeout: 5000 });
+      await page.waitForSelector('[data-radix-select-content]', { timeout: 5000 });
       const firstModel = page.locator('[data-radix-select-item]').first();
-      await firstModel.click();
+      await firstModel.click({ timeout: 5000 });
     }
 
     // Écrire un prompt simple

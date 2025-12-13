@@ -9,59 +9,90 @@ import { useDesignerStore } from '@/store/designerStore';
 
 // Styles personnalisés pour forcer les bordures noires sur toute la landing page
 const landingPageStyles = `
-  .landing-page * {
+  .landing-page,
+  .landing-page *,
+  .landing-page *::before,
+  .landing-page *::after {
     border-color: black !important;
   }
-  .landing-page button {
+  .landing-page div {
     border-color: black !important;
   }
-  .landing-page button:focus {
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-    outline: none !important;
-    ring-color: black !important;
-  }
-  .landing-page input {
+  .landing-page button,
+  .landing-page button * {
     border-color: black !important;
   }
-  .landing-page input:focus {
-    border-color: black !important;
-    box-shadow: 0 0 0 2px black !important;
-    outline: none !important;
-    ring-color: black !important;
-  }
-  .landing-page [data-radix-select-trigger] {
-    border-color: black !important;
-  }
-  .landing-page [data-radix-select-trigger]:focus {
+  .landing-page button:focus,
+  .landing-page button:focus-visible,
+  .landing-page button:hover {
     border-color: black !important;
     box-shadow: 0 0 0 2px black !important;
-    outline: none !important;
+    outline: 2px solid black !important;
+    outline-offset: 0 !important;
     ring-color: black !important;
   }
-  .landing-page [data-radix-select-content] {
+  .landing-page input,
+  .landing-page input * {
+    border-color: black !important;
+  }
+  .landing-page input:focus,
+  .landing-page input:focus-visible {
+    border-color: black !important;
+    box-shadow: 0 0 0 2px black !important;
+    outline: 2px solid black !important;
+    outline-offset: 0 !important;
+    ring-color: black !important;
+  }
+  .landing-page [data-radix-select-trigger],
+  .landing-page [data-radix-select-trigger] * {
+    border-color: black !important;
+  }
+  .landing-page [data-radix-select-trigger]:focus,
+  .landing-page [data-radix-select-trigger]:focus-visible {
+    border-color: black !important;
+    box-shadow: 0 0 0 2px black !important;
+    outline: 2px solid black !important;
+    outline-offset: 0 !important;
+    ring-color: black !important;
+  }
+  .landing-page [data-radix-select-content],
+  .landing-page [data-radix-select-content] * {
+    border-color: black !important;
+  }
+  .landing-page [data-radix-select-item] {
     border-color: black !important;
   }
   .landing-page :focus-visible {
-    outline: none !important;
+    outline: 2px solid black !important;
+    outline-offset: 0 !important;
     border-color: black !important;
     box-shadow: 0 0 0 2px black !important;
   }
-  .landing-page .border {
+  .landing-page .border,
+  .landing-page [class*="border"] {
     border-color: black !important;
   }
   .landing-page .ring-blue-500,
   .landing-page .ring-blue-600,
   .landing-page .ring-blue-700,
   .landing-page .ring-blue-800,
-  .landing-page .ring-blue-900 {
+  .landing-page .ring-blue-900,
+  .landing-page [class*="ring-blue"] {
     --tw-ring-color: black !important;
+    ring-color: black !important;
   }
   .landing-page .border-blue-500,
   .landing-page .border-blue-600,
   .landing-page .border-blue-700,
   .landing-page .border-blue-800,
-  .landing-page .border-blue-900 {
+  .landing-page .border-blue-900,
+  .landing-page [class*="border-blue"] {
+    border-color: black !important;
+  }
+  .landing-page form {
+    border-color: black !important;
+  }
+  .landing-page [class*="rounded"] {
     border-color: black !important;
   }
 `;
@@ -79,45 +110,92 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   const setGeneratingWorkflow = useDesignerStore((state) => state.setGeneratingWorkflow);
   const selectedModelId = useDesignerStore((state) => state.selectedModelId);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsLoading(true);
+    setGeneratingWorkflow(true);
 
-    // Ouvre le studio immédiatement après 2-3 secondes pour une meilleure UX
-    setTimeout(() => {
-      onStartDesigning();
-    }, 2500); // 2.5 secondes
+    try {
+      console.log('🚀 Début de la génération du workflow...');
+      console.log('📝 Prompt:', prompt);
+      console.log('🤖 Modèle sélectionné:', selectedModelId);
 
-    // Fait l'appel API en arrière-plan
-    const generateWorkflow = async () => {
-      try {
-        // Indique que la génération est en cours dans le store
-        setGeneratingWorkflow(true);
+      // Appel API pour générer le workflow
+      const response = await floAIAPI.generateStudioWorkflow({ prompt, model: selectedModelId });
+      console.log('📥 Réponse API complète:', JSON.stringify(response, null, 2));
 
-        const response = await floAIAPI.generateStudioWorkflow({ prompt, model: selectedModelId });
-
-        if (response.status === 'success' && (response.data as any)?.yaml) {
-          const yamlContent = (response.data as any).yaml as string;
-          try {
-            await importWorkflowWithAnimation(yamlContent);
-          } catch (yamlError) {
-            console.error('Failed to import generated YAML workflow:', yamlError);
-          }
-        } else {
-          console.error('Failed to generate workflow from AI:', response.error || response.data);
+      // Vérifier la structure de la réponse
+      let yamlContent: string | null = null;
+      
+      if (response.status === 'success' && response.data) {
+        // L'API backend retourne { status: "success", yaml: "..." }
+        // Le client API enveloppe ça dans { status: 'success', data: { status: "success", yaml: "..." } }
+        const apiData = response.data as any;
+        
+        if (apiData.yaml) {
+          yamlContent = apiData.yaml;
+        } else if (apiData.status === 'success' && apiData.yaml) {
+          yamlContent = apiData.yaml;
+        } else if (typeof apiData === 'string') {
+          // Si data est directement une string (YAML)
+          yamlContent = apiData;
         }
-      } catch (error) {
-        console.error('AI workflow generation failed:', error);
-      } finally {
-        // Arrête l'indicateur de génération
-        setGeneratingWorkflow(false);
-        setIsLoading(false);
       }
-    };
 
-    void generateWorkflow();
+      if (yamlContent) {
+        console.log('📄 YAML brut reçu (premiers 500 caractères):', yamlContent.substring(0, 500));
+        
+        // Nettoyer le YAML (enlever les markdown fences si présents)
+        yamlContent = yamlContent
+          .replace(/^```yaml\s*/i, '')
+          .replace(/^```\s*/i, '')
+          .replace(/```\s*$/i, '')
+          .trim();
+        
+        console.log('📄 YAML nettoyé (premiers 500 caractères):', yamlContent.substring(0, 500));
+        
+        // Ouvrir le studio AVANT d'importer le workflow
+        console.log('🔄 Ouverture du studio...');
+        onStartDesigning();
+        
+        // Attendre un peu pour que le studio se monte complètement
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        try {
+          console.log('🔄 Import du workflow dans le studio...');
+          await importWorkflowWithAnimation(yamlContent);
+          console.log('✅ Workflow importé avec succès!');
+        } catch (yamlError) {
+          console.error('❌ Erreur lors de l\'import du workflow YAML:', yamlError);
+          console.error('📄 YAML qui a causé l\'erreur:', yamlContent);
+          if (yamlError instanceof Error) {
+            console.error('📝 Détails de l\'erreur:', yamlError.message);
+            console.error('📝 Stack:', yamlError.stack);
+          }
+        }
+      } else {
+        console.error('❌ Aucun YAML trouvé dans la réponse');
+        console.error('📥 Structure de la réponse:', JSON.stringify(response, null, 2));
+        // Ouvrir le studio quand même pour que l'utilisateur puisse créer manuellement
+        console.log('🔄 Ouverture du studio (mode manuel)...');
+        onStartDesigning();
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de la génération du workflow:', error);
+      if (error instanceof Error) {
+        console.error('📝 Message d\'erreur:', error.message);
+        console.error('📝 Stack trace:', error.stack);
+      }
+      // Ouvrir le studio quand même en cas d'erreur
+      onStartDesigning();
+    } finally {
+      // Arrête l'indicateur de génération
+      setGeneratingWorkflow(false);
+      setIsLoading(false);
+      console.log('🏁 Génération terminée');
+    }
   };
 
   const handleFileClick = () => {
@@ -134,12 +212,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: landingPageStyles }} />
-      <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden landing-page">
+      <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden landing-page" style={{ border: '4px solid black' }}>
       {/* Bordure extérieure - effet de carte flottante */}
-      <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px' }}>
-        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl">
+      <div className="absolute inset-0 bg-gray-900" style={{ padding: '15px', border: '4px solid black' }}>
+        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl" style={{ border: '4px solid black' }}>
           {/* Contenu intérieur avec espace */}
-          <div className="w-full h-full rounded-[30px] overflow-hidden relative">
+          <div className="w-full h-full rounded-[30px] overflow-hidden relative" style={{ border: '2px solid black' }}>
             <ShaderAnimation />
             <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
               {/* Logo + Tagline */}
@@ -166,7 +244,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                   </div>
 
                   {/* Main Prompt Bar */}
-                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3" style={{ borderColor: 'black' }}>
+                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 border-16 border-black px-6 py-3" style={{ borderColor: 'black', border: '4px solid black' }}>
                     {/* Left icons */}
                     <div className="flex items-center gap-4 text-neutral-400">
                       <button
@@ -200,7 +278,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
                 size="icon"
                 disabled={isLoading}
                 className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 disabled:hover:bg-neutral-200 border-8 border-black focus:border-black focus:ring-0 focus:ring-black !border-black"
-                style={{ borderColor: 'black' }}
+                style={{ borderColor: 'black', border: '4px solid black' }}
               >
                       <CornerDownLeft className="w-4 h-4" />
                     </Button>
@@ -209,7 +287,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartDesigning }) => {
               </form>
 
               {files.length > 0 && (
-                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-8 border-black rounded-lg px-3 py-2 bg-black" style={{ borderColor: 'black' }}>
+                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 border-8 border-black rounded-lg px-3 py-2 bg-black" style={{ borderColor: 'black', border: '4px solid black' }}>
                   {files.length === 1
                     ? `1 fichier ajouté : ${files[0].name}`
                     : `${files.length} fichiers ajoutés`}

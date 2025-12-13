@@ -32,11 +32,11 @@ export default defineConfig({
     },
   ],
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm dev',
-    port: 5173,
-    timeout: 120 * 1000, // 2 minutes timeout
-    reuseExistingServer: !process.env.CI,
-  },
+  /* NOTE: Start the dev server manually before running tests */
+  // webServer: {
+  //   command: 'pnpm dev',
+  //   port: 5173,
+  //   timeout: 60 * 1000, // 1 minute timeout
+  //   reuseExistingServer: true,
+  // },
 });

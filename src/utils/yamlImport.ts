@@ -24,8 +24,10 @@ export function parseAriumYAML(yamlContent: string): ImportResult {
     // Create agent nodes
     if (workflow.arium.agents) {
       workflow.arium.agents.forEach((agent, index) => {
+        // Use agent.id if available, otherwise use agent.name
+        const agentId = agent.id || agent.name;
         const agentNode: CustomNode = {
-          id: agent.name,
+          id: agentId,
           type: 'agent',
           position: { 
             x: 100 + (index % 3) * 300, 
@@ -33,7 +35,7 @@ export function parseAriumYAML(yamlContent: string): ImportResult {
           },
           data: {
             agent: {
-              id: agent.name,
+              id: agentId,
               name: agent.name,
               role: agent.role,
               job: agent.job,

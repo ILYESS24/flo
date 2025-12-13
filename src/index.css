@@ -136,3 +136,18 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* Force black borders on landing page */
+.landing-page,
+.landing-page * {
+  border-color: black !important;
+}
+
+.landing-page [class*="border"] {
+  border-color: black !important;
+}
+
+.landing-page [class*="ring"] {
+  --tw-ring-color: black !important;
+  ring-color: black !important;
+}

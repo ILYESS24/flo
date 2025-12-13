@@ -51,10 +51,18 @@ class FloAIAPI {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
+      
+      // Si la réponse contient déjà un status, on la retourne telle quelle
+      // Sinon, on l'enveloppe dans data
+      if (data.status) {
+        return { status: data.status === 'success' ? 'success' : 'error', data, error: data.detail || data.error };
+      }
+      
       return { status: 'success', data };
     } catch (error) {
       console.error('API request failed:', error);
