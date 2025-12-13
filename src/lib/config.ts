@@ -8,12 +8,20 @@ const API_BASE_URL =
 const OPENAI_API_KEY =
   (import.meta as any).env?.VITE_OPENAI_API_KEY || '';
 
+// OpenRouter API Key - Production key
+// Must be set via environment variable VITE_OPENROUTER_API_KEY
+const OPENROUTER_API_KEY =
+  (import.meta as any).env?.VITE_OPENROUTER_API_KEY || '';
+
 export const config = {
   // URL de l'API backend
   API_BASE_URL,
 
   // OpenAI API Key
   OPENAI_API_KEY,
+
+  // OpenRouter API Key
+  OPENROUTER_API_KEY,
 
   // Configuration des providers LLM
   LLM_PROVIDERS: {

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useDesignerStore } from '@/store/designerStore';
-import { config } from '@/lib/config';
 import { Brain, Loader2 } from 'lucide-react';
 import { useOpenRouterModels } from '@/hooks/useOpenRouterModels';
 import { openRouterService } from '@/lib/openrouter';
