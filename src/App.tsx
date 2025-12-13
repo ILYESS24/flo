@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 import { useDesignerStore } from '@/store/designerStore';
 import { Button } from '@/components/ui/button';
@@ -12,10 +12,8 @@ import YamlPreviewDrawer from '@/components/drawer/YamlPreviewDrawer';
 import ImportDialog from '@/components/dialogs/ImportDialog';
 import ValidationPanel from '@/components/panels/ValidationPanel';
 import LandingPage from '@/components/LandingPage';
-import './App.css';
 
-// Simplified Config Editor Modal
-const ConfigEditorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
+const ConfigEditorModal = memo<{ isOpen: boolean; onClose: () => void }>(({ isOpen, onClose }) => {
   if (!isOpen) return null;
   
   return (
@@ -29,14 +27,18 @@ const ConfigEditorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
     </div>
   );
-};
+});
+ConfigEditorModal.displayName = 'ConfigEditorModal';
 
-const ToolbarComponent: React.FC<{
+interface ToolbarProps {
   showValidation: boolean;
   setShowValidation: (show: boolean) => void;
   isGeneratingWorkflow: boolean;
-}> = ({ showValidation, setShowValidation, isGeneratingWorkflow }) => {
-  const { openAgentEditor, openRouterEditor } = useDesignerStore();
+}
+
+const ToolbarComponent = memo<ToolbarProps>(({ showValidation, setShowValidation, isGeneratingWorkflow }) => {
+  const openAgentEditor = useDesignerStore(s => s.openAgentEditor);
+  const openRouterEditor = useDesignerStore(s => s.openRouterEditor);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
 
@@ -48,8 +50,8 @@ const ToolbarComponent: React.FC<{
           <div className="text-sm text-gray-600">Visual Workflow Designer</div>
           {isGeneratingWorkflow && (
             <div className="flex items-center space-x-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-blue-700">Génération du workflow en cours...</span>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              <span className="text-sm text-blue-700">Generating workflow...</span>
             </div>
           )}
         </div>
@@ -79,36 +81,36 @@ const ToolbarComponent: React.FC<{
             <Settings className="w-4 h-4 mr-1" />
             Config
           </Button>
-
         </div>
       </div>
       <ConfigEditorModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
       <ImportDialog isOpen={isImportOpen} onClose={() => setIsImportOpen(false)} />
     </>
   );
-};
+});
+ToolbarComponent.displayName = 'ToolbarComponent';
 
 function App() {
   const [showValidation, setShowValidation] = useState(true);
   const [showLandingPage, setShowLandingPage] = useState(true);
-  const { loadOpenRouterModels, isGeneratingWorkflow } = useDesignerStore();
+  const loadOpenRouterModels = useDesignerStore(s => s.loadOpenRouterModels);
+  const isGeneratingWorkflow = useDesignerStore(s => s.isGeneratingWorkflow);
 
-  // Load OpenRouter models on app startup
   useEffect(() => {
     void loadOpenRouterModels();
   }, [loadOpenRouterModels]);
 
-  const handleStartDesigning = () => {
-    setShowLandingPage(false);
-  };
-
   if (showLandingPage) {
-    return <LandingPage onStartDesigning={handleStartDesigning} />;
+    return <LandingPage onStartDesigning={() => setShowLandingPage(false)} />;
   }
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <ToolbarComponent showValidation={showValidation} setShowValidation={setShowValidation} isGeneratingWorkflow={isGeneratingWorkflow} />
+      <ToolbarComponent 
+        showValidation={showValidation} 
+        setShowValidation={setShowValidation} 
+        isGeneratingWorkflow={isGeneratingWorkflow} 
+      />
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
         <div className="flex-1 relative">
@@ -118,13 +120,9 @@ function App() {
         </div>
         {showValidation && <ValidationPanel />}
       </div>
-
-      {/* Modals */}
       <AgentEditor />
       <RouterEditor />
       <EdgeEditor />
-
-      {/* YAML Preview Drawer */}
       <YamlPreviewDrawer />
     </div>
   );

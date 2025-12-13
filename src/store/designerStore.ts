@@ -399,9 +399,8 @@ export const useDesignerStore = create<DesignerState>((set) => ({
     });
   },
 
-  loadWorkflow: (workflow) => {
+  loadWorkflow: (_workflow) => {
     // TODO: Implement workflow loading from YAML
-    console.log('Loading workflow:', workflow);
   },
 
   importFromYAML: async (yamlContent) => {
