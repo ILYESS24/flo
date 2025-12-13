@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, memo, lazy, Suspense } from 'reac
 import { Button } from '@/components/ui/button';
 import { Typewriter } from '@/components/ui/typewriter';
 import { ModelSelector } from '@/components/ui/model-selector';
-import { Link2, CornerDownLeft, Loader2 } from 'lucide-react';
+import { Link2, CornerDownLeft, Loader2, Library } from 'lucide-react';
 import floAIAPI from '@/lib/api';
 import { useDesignerStore } from '@/store/designerStore';
 
@@ -173,6 +173,17 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
                   </div>
                 </div>
               </form>
+
+              {/* AI Agent Library Button */}
+              <a
+                href="https://2c4e1142.n8n-react-app.pages.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-white text-sm transition-all duration-200 backdrop-blur-sm"
+              >
+                <Library className="w-4 h-4" />
+                <span>AI Agent Library</span>
+              </a>
 
               {files.length > 0 && (
                 <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 rounded-lg px-3 py-2 bg-black/50">
