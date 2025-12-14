@@ -101,9 +101,9 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-900 overflow-hidden">
-      <div className="absolute inset-0 bg-gray-900" style={{ padding: 15 }}>
-        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl">
+    <div className="relative min-h-screen w-full bg-black overflow-hidden">
+      <div className="absolute inset-0 bg-black" style={{ padding: 15 }}>
+        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl border-2 border-black">
           <div className="w-full h-full rounded-[30px] overflow-hidden relative">
             <Suspense fallback={<ShaderFallback />}>
               <ShaderAnimation />
