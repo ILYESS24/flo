@@ -14,11 +14,19 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Performance optimizations */
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
+
+    /* Linting - strict for production quality */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": false,
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": false,
 
     /* Path mapping */
     "baseUrl": ".",
@@ -27,5 +35,6 @@
     }
   },
   "include": ["src"],
+  "exclude": ["node_modules", "dist", "build", "*.spec.ts", "*.test.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

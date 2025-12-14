@@ -2,10 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://openrouter.ai" />
+    
+    <!-- Preload critical font -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" as="style" />
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta -->
     <title>Flo AI Studio - Visual Workflow Designer</title>
-    <meta name="description" content="Visual designer for creating YAML-based AI agent workflows" />
+    <meta name="description" content="Visual designer for creating YAML-based AI agent workflows. Build powerful multi-agent automations with drag and drop." />
+    <meta name="theme-color" content="#1f2937" />
+    
+    <!-- Mobile optimization -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Performance hints -->
+    <meta http-equiv="X-DNS-Prefetch-Control" content="on" />
+    <link rel="dns-prefetch" href="https://openrouter.ai" />
+    
+    <!-- Critical inline CSS for faster first paint -->
+    <style>
+      html, body, #root { height: 100%; margin: 0; padding: 0; }
+      body { font-family: 'Poppins', system-ui, -apple-system, sans-serif; background: #111827; }
+      #root { display: flex; flex-direction: column; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

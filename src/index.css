@@ -1,4 +1,4 @@
-/* Preload fonts with font-display: swap for faster rendering */
+/* Font loaded via preload in index.html for better performance */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;

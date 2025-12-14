@@ -2,12 +2,13 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
   ],
+  // Optimize for production - only include used classes
+  safelist: [],
   prefix: "",
+  // Enable JIT mode for faster builds
+  mode: 'jit',
   theme: {
   	container: {
   		center: true,

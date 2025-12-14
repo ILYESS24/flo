@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { addEdge, Connection, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from 'reactflow';
 import { Agent, Tool, Router, DesignerConfig, LLMConfig } from '@/types/agent';
 import { CustomNode, CustomEdge, AgentNodeData, ToolNodeData, RouterNodeData } from '@/types/reactflow';
-import { openRouterService } from '@/lib/openrouter';
+import { openRouterService, createOpenRouterService } from '@/lib/openrouter';
+import { parseAriumYAML } from '@/utils/yamlImport';
 import { config } from '@/lib/config';
 
 interface DesignerState {
@@ -405,7 +406,6 @@ export const useDesignerStore = create<DesignerState>((set) => ({
 
   importFromYAML: async (yamlContent) => {
     try {
-      const { parseAriumYAML } = await import('@/utils/yamlImport');
       const result = parseAriumYAML(yamlContent);
 
       set({
@@ -425,7 +425,6 @@ export const useDesignerStore = create<DesignerState>((set) => ({
 
   importWorkflowWithAnimation: async (yamlContent) => {
     try {
-      const { parseAriumYAML } = await import('@/utils/yamlImport');
       const result = parseAriumYAML(yamlContent);
 
       // Clear current workflow
@@ -491,7 +490,7 @@ export const useDesignerStore = create<DesignerState>((set) => ({
   loadOpenRouterModels: async () => {
     try {
       const service = config.OPENROUTER_API_KEY 
-        ? (await import('@/lib/openrouter')).createOpenRouterService(config.OPENROUTER_API_KEY)
+        ? createOpenRouterService(config.OPENROUTER_API_KEY)
         : openRouterService;
       
       const models = await service.fetchModels();

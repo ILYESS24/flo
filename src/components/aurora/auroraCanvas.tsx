@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, memo } from 'react';
 import ReactFlow, {
   Controls,
   Background,
@@ -19,6 +19,7 @@ import RouterNode from './RouterNode';
 import CustomEdge from './CustomEdge';
 import { FileText } from 'lucide-react';
 
+// Memoize node and edge types to prevent re-renders
 const nodeTypes: NodeTypes = {
   agent: AgentNode,
   tool: ToolNode,
@@ -29,7 +30,22 @@ const edgeTypes: EdgeTypes = {
   custom: CustomEdge,
 };
 
-const AuroraCanvas: React.FC = () => {
+// Empty state component - memoized
+const EmptyState = memo(() => (
+  <div className="w-full h-full bg-gray-50 flex items-center justify-center">
+    <div className="text-center text-gray-500 px-4">
+      <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
+      <h3 className="text-lg font-medium mb-2">Start Building Your Workflow</h3>
+      <p className="text-sm max-w-md mx-auto">
+        Create agents, connect them with tools, and build powerful AI workflows. 
+        Click "Agent" in the toolbar to get started.
+      </p>
+    </div>
+  </div>
+));
+EmptyState.displayName = 'EmptyState';
+
+const AuroraCanvas: React.FC = memo(() => {
   const {
     nodes,
     edges,
@@ -85,18 +101,7 @@ const AuroraCanvas: React.FC = () => {
 
   // Show empty state if no nodes
   if (localNodes.length === 0) {
-    return (
-      <div className="w-full h-full bg-gray-50 flex items-center justify-center">
-        <div className="text-center text-gray-500 px-4">
-          <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium mb-2">Start Building Your Workflow</h3>
-          <p className="text-sm max-w-md mx-auto">
-            Create agents, connect them with tools, and build powerful AI workflows. 
-            Click "Agent" in the toolbar to get started.
-          </p>
-        </div>
-      </div>
-    );
+    return <EmptyState />;
   }
 
   return (
@@ -122,6 +127,8 @@ const AuroraCanvas: React.FC = () => {
       </ReactFlow>
     </div>
   );
-};
+});
+
+AuroraCanvas.displayName = 'AuroraCanvas';
 
 export default AuroraCanvas;

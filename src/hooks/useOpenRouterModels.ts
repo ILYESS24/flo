@@ -1,6 +1,6 @@
 // Optimized hook to load and manage OpenRouter models with caching
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { openRouterService, OpenRouterModel } from '@/lib/openrouter';
+import { openRouterService, OpenRouterModel, createOpenRouterService } from '@/lib/openrouter';
 import { LLMConfig } from '@/types/agent';
 
 // Cache configuration
@@ -65,7 +65,7 @@ export const useOpenRouterModels = (apiKey?: string): UseOpenRouterModelsReturn 
       setError(null);
       
       const service = apiKey 
-        ? (await import('@/lib/openrouter')).createOpenRouterService(apiKey)
+        ? createOpenRouterService(apiKey)
         : openRouterService;
       
       const fetchedModels = await service.fetchModels();
