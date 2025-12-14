@@ -63,26 +63,26 @@ export const ModelSelector: React.FC<ModelSelectorProps> = memo(({ className = '
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <Brain className="w-4 h-4 text-neutral-500" />
+      <Brain className="w-4 h-4 text-neutral-500 shrink-0" />
       <Select value={selectedModelId} onValueChange={handleModelChange}>
-        <SelectTrigger className="h-9 bg-neutral-900 border border-neutral-700 text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 min-w-[200px]">
+        <SelectTrigger className="h-10 sm:h-9 bg-neutral-900 border border-neutral-700 text-neutral-100 hover:bg-neutral-800 focus:ring-0 focus:ring-offset-0 min-w-0 w-full sm:min-w-[200px] sm:w-auto text-sm touch-manipulation">
           {isLoading ? (
             <div className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Loading...</span>
+              <span className="text-xs sm:text-sm">Loading...</span>
             </div>
           ) : error ? (
-            <span className="text-red-400">Error</span>
+            <span className="text-red-400 text-xs sm:text-sm">Error</span>
           ) : (
-            <SelectValue placeholder="Model AI" />
+            <SelectValue placeholder="Select AI Model" />
           )}
         </SelectTrigger>
-        <SelectContent className="max-h-[400px] bg-neutral-900 border border-neutral-700">
+        <SelectContent className="max-h-[60vh] sm:max-h-[400px] bg-neutral-900 border border-neutral-700 w-[calc(100vw-2rem)] sm:w-auto max-w-[400px]">
           {groupEntries.map(([provider, providerModels]) => (
             <ProviderGroup key={provider} provider={provider} models={providerModels} />
           ))}
           {groupEntries.length === 0 && !isLoading && !error && (
-            <div className="px-2 py-4 text-center text-neutral-400">
+            <div className="px-2 py-4 text-center text-neutral-400 text-sm">
               No models available
             </div>
           )}

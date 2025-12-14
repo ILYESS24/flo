@@ -101,16 +101,20 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full bg-black overflow-hidden">
-      <div className="absolute inset-0 bg-black" style={{ padding: 15 }}>
-        <div className="w-full h-full bg-black rounded-[35px] shadow-2xl border-2 border-black">
-          <div className="w-full h-full rounded-[30px] overflow-hidden relative">
+    <div className="relative min-h-screen min-h-[100dvh] w-full bg-black overflow-hidden">
+      {/* Responsive padding: smaller on mobile, larger on desktop */}
+      <div className="absolute inset-0 bg-black p-2 sm:p-3 md:p-4">
+        <div className="w-full h-full bg-black rounded-2xl sm:rounded-3xl md:rounded-[35px] shadow-2xl border-2 border-black">
+          <div className="w-full h-full rounded-xl sm:rounded-2xl md:rounded-[30px] overflow-hidden relative">
             <Suspense fallback={<ShaderFallback />}>
               <ShaderAnimation />
             </Suspense>
             
-            <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen flex flex-col items-center justify-center space-y-12 px-4">
-              <div className="text-center space-y-4">
+            {/* Main content container - responsive spacing */}
+            <div className="relative z-10 w-full max-w-4xl mx-auto min-h-screen min-h-[100dvh] flex flex-col items-center justify-center space-y-6 sm:space-y-8 md:space-y-12 px-3 sm:px-4 md:px-6 py-8 sm:py-12">
+              
+              {/* Typewriter text - responsive font size */}
+              <div className="text-center space-y-4 px-2">
                 <Typewriter
                   text={[
                     'Stop building complex workflows, one prompt is enough',
@@ -120,25 +124,29 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
                   speed={80}
                   deleteSpeed={40}
                   delay={1600}
-                  className="block text-lg md:text-xl font-semibold text-gray-100/90 drop-shadow-md"
+                  className="block text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-100/90 drop-shadow-md leading-relaxed"
                 />
               </div>
 
-              <form onSubmit={handleSubmit} className="w-full max-w-4xl">
-                <div className="flex flex-col gap-3">
+              {/* Form - responsive width and padding */}
+              <form onSubmit={handleSubmit} className="w-full max-w-4xl px-2 sm:px-0">
+                <div className="flex flex-col gap-2 sm:gap-3">
+                  {/* Model selector - centered */}
                   <div className="flex justify-center">
-                    <ModelSelector />
+                    <ModelSelector className="w-full sm:w-auto" />
                   </div>
 
-                  <div className="flex items-center gap-4 rounded-3xl bg-neutral-900 px-6 py-3">
-                    <div className="flex items-center gap-4 text-neutral-400">
+                  {/* Input container - responsive padding and touch-friendly */}
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4 rounded-2xl sm:rounded-3xl bg-neutral-900 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3">
+                    {/* File attach button - larger touch target on mobile */}
+                    <div className="flex items-center text-neutral-400">
                       <button
                         type="button"
                         onClick={handleFileClick}
-                        className="hover:text-neutral-200 transition-colors"
+                        className="p-2 -m-2 hover:text-neutral-200 transition-colors touch-manipulation"
                         aria-label="Attach file"
                       >
-                        <Link2 className="w-4 h-4" />
+                        <Link2 className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                       <input
                         ref={fileInputRef}
@@ -149,20 +157,24 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
                       />
                     </div>
 
+                    {/* Text input - larger on mobile for easier typing */}
                     <input
                       type="text"
                       placeholder="Describe your automation..."
                       value={prompt}
                       onChange={handlePromptChange}
-                      className="flex-1 bg-transparent border-0 outline-none text-base text-neutral-100 placeholder:text-neutral-500"
+                      className="flex-1 bg-transparent border-0 outline-none text-sm sm:text-base text-neutral-100 placeholder:text-neutral-500 min-w-0"
                       disabled={isLoading}
+                      autoComplete="off"
+                      autoCapitalize="sentences"
                     />
 
+                    {/* Submit button - larger touch target */}
                     <Button
                       type="submit"
                       size="icon"
                       disabled={isLoading || !prompt.trim()}
-                      className="h-9 w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60"
+                      className="h-10 w-10 sm:h-9 sm:w-9 rounded-full bg-neutral-200 text-neutral-900 hover:bg-white shrink-0 disabled:opacity-60 touch-manipulation"
                     >
                       {isLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -174,19 +186,20 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
                 </div>
               </form>
 
-              {/* AI Agent Library Button */}
+              {/* AI Agent Library Button - touch-friendly */}
               <a
                 href="https://2c4e1142.n8n-react-app.pages.dev"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-white text-sm transition-all duration-200 backdrop-blur-sm"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-2 rounded-full bg-neutral-800/50 hover:bg-neutral-700/50 active:bg-neutral-600/50 text-neutral-300 hover:text-white text-sm transition-all duration-200 backdrop-blur-sm touch-manipulation"
               >
                 <Library className="w-4 h-4" />
                 <span>AI Agent Library</span>
               </a>
 
+              {/* Attached files indicator */}
               {files.length > 0 && (
-                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 rounded-lg px-3 py-2 bg-black/50">
+                <div className="w-full max-w-3xl text-xs text-neutral-300/80 mt-2 rounded-lg px-3 py-2 bg-black/50 mx-2">
                   {files.length === 1
                     ? `1 file attached: ${files[0].name}`
                     : `${files.length} files attached`}
