@@ -31,6 +31,7 @@ export interface APIResponse<T = unknown> {
 
 // Request timeout in milliseconds
 const REQUEST_TIMEOUT = 30000;
+const AI_GENERATION_TIMEOUT = 120000; // 2 minutes for AI generation (cold start + generation)
 
 class FloAIAPI {
   private baseURL: string;
@@ -38,6 +39,7 @@ class FloAIAPI {
 
   constructor() {
     this.baseURL = config.API_BASE_URL;
+    console.log('🔧 API configured with baseURL:', this.baseURL);
   }
 
   private async request<T>(
@@ -47,13 +49,18 @@ class FloAIAPI {
   ): Promise<APIResponse<T>> {
     // Create abort controller for timeout
     const abortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), timeout);
+    const timeoutId = setTimeout(() => {
+      console.log('⏰ Request timeout after', timeout, 'ms');
+      abortController.abort();
+    }, timeout);
     
     // Store controller for potential cancellation
     this.abortControllers.set(endpoint, abortController);
 
+    const url = `${this.baseURL}${endpoint}`;
+    console.log('📡 API Request:', options.method || 'GET', url);
+
     try {
-      const url = `${this.baseURL}${endpoint}`;
       const response = await fetch(url, {
         ...options,
         signal: abortController.signal,
@@ -64,32 +71,43 @@ class FloAIAPI {
       });
 
       clearTimeout(timeoutId);
+      console.log('📥 Response status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('❌ HTTP Error:', response.status, errorText);
         throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('📦 Response data keys:', Object.keys(data));
       
-      // Handle response structure
-      if (data.status) {
+      // Handle response structure - backend returns {status, yaml}
+      if (data.status === 'success') {
         return { 
-          status: data.status === 'success' ? 'success' : 'error', 
-          data, 
-          error: data.detail || data.error 
+          status: 'success', 
+          data,
+          error: undefined
+        };
+      } else if (data.status === 'error' || data.detail) {
+        return {
+          status: 'error',
+          data,
+          error: data.detail || data.error || 'Unknown error'
         };
       }
       
+      // Fallback: wrap response in success
       return { status: 'success', data };
     } catch (error) {
       clearTimeout(timeoutId);
       
       if (error instanceof Error && error.name === 'AbortError') {
-        return { status: 'error', error: 'Request timeout' };
+        console.error('⏰ Request aborted (timeout)');
+        return { status: 'error', error: 'Timeout: Le serveur met trop de temps à répondre. Réessayez.' };
       }
       
-      console.error('API request failed:', error);
+      console.error('❌ API request failed:', error);
       return {
         status: 'error',
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -139,10 +157,11 @@ class FloAIAPI {
 
   // Generate workflow YAML from natural language
   async generateStudioWorkflow(request: StudioAIWorkflowRequest): Promise<APIResponse<{ yaml?: string; status?: string }>> {
+    console.log('🤖 Generating workflow with model:', request.model);
     return this.request('/studio/ai-workflow', {
       method: 'POST',
       body: JSON.stringify(request),
-    }, 60000); // 60s timeout for AI generation
+    }, AI_GENERATION_TIMEOUT); // 2 minutes timeout (cold start + generation)
   }
 
   // Test connection

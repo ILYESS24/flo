@@ -39,23 +39,31 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
 
     setIsLoading(true);
     setGeneratingWorkflow(true);
+    
+    console.log('🚀 Generating workflow...');
+    console.log('📝 Prompt:', trimmedPrompt);
+    console.log('🤖 Model:', selectedModelId);
 
     try {
-      // Appel API optimisé
+      // Appel API
       const response = await floAIAPI.generateStudioWorkflow({ 
         prompt: trimmedPrompt, 
         model: selectedModelId 
       });
 
+      console.log('📥 API Response:', response);
+
       let yamlContent: string | null = null;
       
+      // Extraire le YAML de la réponse
       if (response.status === 'success' && response.data) {
         const apiData = response.data as { yaml?: string; status?: string };
         yamlContent = apiData.yaml || null;
+        console.log('✅ YAML extracted:', yamlContent ? 'YES' : 'NO');
+      } else {
+        console.error('❌ API error:', response.error);
+        alert(`Erreur API: ${response.error || 'Erreur inconnue'}`);
       }
-
-      // Ouvrir le studio immédiatement
-      onStartDesigning();
 
       if (yamlContent) {
         // Nettoyer le YAML
@@ -65,19 +73,30 @@ const LandingPage: React.FC<LandingPageProps> = memo(({ onStartDesigning }) => {
           .replace(/```\s*$/i, '')
           .trim();
         
-        // Import différé pour laisser le studio se monter
-        requestAnimationFrame(() => {
-          setTimeout(async () => {
-            try {
-              await importWorkflowWithAnimation(cleanedYaml);
-            } catch (err) {
-              console.error('Import error:', err);
-            }
-          }, 500);
-        });
+        console.log('🧹 Cleaned YAML:', cleanedYaml.substring(0, 200) + '...');
+        
+        // Ouvrir le studio
+        onStartDesigning();
+        
+        // Import avec délai pour laisser le studio se monter
+        setTimeout(async () => {
+          try {
+            console.log('📦 Importing workflow...');
+            await importWorkflowWithAnimation(cleanedYaml);
+            console.log('✅ Workflow imported successfully!');
+          } catch (err) {
+            console.error('❌ Import error:', err);
+            alert(`Erreur d'import: ${err}`);
+          }
+        }, 800);
+      } else {
+        // Pas de YAML, ouvrir le studio vide
+        console.log('⚠️ No YAML content, opening empty studio');
+        onStartDesigning();
       }
     } catch (error) {
-      console.error('Workflow generation error:', error);
+      console.error('❌ Workflow generation error:', error);
+      alert(`Erreur: ${error instanceof Error ? error.message : 'Erreur de connexion'}`);
       onStartDesigning();
     } finally {
       setGeneratingWorkflow(false);
